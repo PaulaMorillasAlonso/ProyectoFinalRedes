@@ -4,8 +4,8 @@
 #include <cassert>
 
 #include <SDL2/SDL.h>
-
-#include "../../Utils/Vector2D.h"
+#include <SDL2/SDL_image.h>
+//#include "../../Utils/Vector2D.h"
 
 class GameObject {
 public:
