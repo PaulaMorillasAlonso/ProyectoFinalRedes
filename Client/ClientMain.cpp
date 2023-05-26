@@ -1,9 +1,9 @@
 #include <thread>
-#include "../NetUtils/Chat.h"
+#include "GameClient.h"
 
 int main(int argc, char **argv)
 {
-    ChatClient ec(argv[1], argv[2], argv[3]);
+    GameClient ec(argv[1], argv[2], argv[3]);
 
     std::thread net_thread([&ec](){ ec.net_thread(); });
 
