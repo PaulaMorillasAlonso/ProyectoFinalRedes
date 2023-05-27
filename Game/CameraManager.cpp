@@ -1,4 +1,4 @@
-#include "CameraManager.h"
+/*#include "CameraManager.h"
 #include "../SDL_Utils/Environment.h"
 
 #include <cassert>
@@ -18,4 +18,4 @@ void CameraManager::scrollY(float center) {
         // if (scrollingObjects_[i].getTransform().getY() >? <?)
         // Si se sale de pantalla, desactivar.
     }
-}
+}*/

@@ -1,4 +1,4 @@
-#ifndef BACKGROUND_H_
+/*#ifndef BACKGROUND_H_
 #define BACKGROUND_H_
 
 #include "../../SDL_Utils/GameObject.h"
@@ -9,4 +9,4 @@ public:
     virtual ~Background();
 private:
 };
-#endif
+#endif*/

@@ -1,4 +1,4 @@
-#include "Player.h"
+/*#include "Player.h"
 
 Player::Player(GameClient* game) : GameObject(), vel_(), gravity(-9.8), jumpVel(50.0) {
 	app_ = game;
@@ -42,4 +42,4 @@ void Player::render() {
 void Player::setKeys(SDL_Scancode left, SDL_Scancode right) {
 	left_ = left;
 	right_ = right;
-}
+}*/

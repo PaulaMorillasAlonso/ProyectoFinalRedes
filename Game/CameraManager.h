@@ -1,4 +1,4 @@
-#ifndef GAMEMANAGER_H
+/*#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -43,4 +43,4 @@ private:
 //
 inline CameraManager& GameManager() {
 	return *CameraManager::instance();
-}
+}*/

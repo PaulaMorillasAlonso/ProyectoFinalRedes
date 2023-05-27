@@ -1,4 +1,4 @@
-#ifndef GAMEMANAGER_H
+/*#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -45,4 +45,4 @@ private:
 //
 inline GameManager& GameManager() {
 	return *GameManager::instance();
-}
+}*/

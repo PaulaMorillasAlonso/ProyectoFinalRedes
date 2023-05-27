@@ -1,4 +1,4 @@
-#ifndef PLAYER_H_
+/*#ifndef PLAYER_H_
 #define PLAYER_H_
 
 #include "../../SDL_Utils/GameObject.h"
@@ -33,4 +33,4 @@ private:
     TankMessageClient::InputType key;
 	SDL_Scancode left_, right_;
 };
-#endif
+#endif*/

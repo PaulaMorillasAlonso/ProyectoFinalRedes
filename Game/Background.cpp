@@ -1,4 +1,4 @@
-#include "Background.h"
+/*#include "Background.h"
 
 #include "../Managers/GameManager.h"
 #include "../SDL_Utils/Environment.h"
@@ -10,4 +10,4 @@ Background::Background() : GameObject(){
 }
 
 Background::~Background() {
-}
+}*/

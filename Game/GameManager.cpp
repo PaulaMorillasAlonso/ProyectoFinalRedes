@@ -1,4 +1,4 @@
-#include "GameManager.h"
+/*#include "GameManager.h"
 #include "../SDL_Utils/Environment.h"
 
 #include <cassert>
@@ -20,4 +20,4 @@ Vector2D GameManager::getRelativeWindowSize() {
 void GameManager::setWindowSize(Vector2D limit) {
 		windowSize_ = limit;
 		relativeSize_ = Vector2D(Environment::instance()->width() - windowSize_.getX(),Environment::instance()->height() - windowSize_.getY());
-}
+}*/
