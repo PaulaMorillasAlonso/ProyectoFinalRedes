@@ -35,7 +35,10 @@ public:
      *  en STDOUT
      */
     void net_thread();
-
+    /*
+    Crea una pantalla de sdl para renderizado de tamaño w * h
+    */
+    void initClient(int w,int h);
 private:
 
     /**

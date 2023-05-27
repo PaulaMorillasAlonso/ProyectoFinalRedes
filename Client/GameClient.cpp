@@ -1,5 +1,6 @@
 #include "GameClient.h"
 #include "../NetUtils/Message.h"
+#include "SDL2/SDL.h"
 void GameClient::login()
 {
     std::string msg;
@@ -7,9 +8,39 @@ void GameClient::login()
     em.type = Message::LOGIN;
 
     socket.send(em, socket);
+    initClient(720,480);
 
 }
+void GameClient::initClient(int w, int h){
 
+	
+  /* Initialises data */
+  SDL_Window *window = NULL;
+  
+  /*
+  * Initialises the SDL video subsystem (as well as the events subsystem).
+  * Returns 0 on success or a negative error code on failure using SDL_GetError().
+  */
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    fprintf(stderr, "SDL failed to initialise: %s\n", SDL_GetError());
+  }
+
+  /* Creates a SDL window */
+  window = SDL_CreateWindow("SDL Example", /* Title of the SDL window */
+			    200, /* Position x of the window */
+			    200, /* Position y of the window */
+			    w, /* Width of the window in pixels */
+			    h, /* Height of the window in pixels */
+			    0); /* Additional flag(s) */
+
+  /* Checks if window has been created; if not, exits program */
+  if (window == NULL) {
+    fprintf(stderr, "SDL window failed to initialise: %s\n", SDL_GetError());
+  }
+    SDL_Renderer* renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+
+}
 void GameClient::logout()
 {
     std::string msg;
