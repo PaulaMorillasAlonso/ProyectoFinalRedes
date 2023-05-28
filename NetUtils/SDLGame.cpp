@@ -1,12 +1,12 @@
 #include "SDLGame.h"
 #include "iostream"
 #include <SDL2/SDL.h>
-
+#include <SDL2/SDL_image.h>
+#include <string>
 SDLGame* SDLGame::instance = nullptr;
 
 SDLGame::SDLGame(){
     initSDL();
-	initResources();
 }
 
 SDLGame::~SDLGame(){
@@ -26,9 +26,31 @@ void SDLGame::initSDL(){
 	if (window_ == NULL || renderer_ == NULL) {
 		std::cout<< "Game window or renderer was null \n";
 	}
+    // Sinicializa la libreria de sdl image
+    int flags = IMG_INIT_PNG;
+    int initStatus = IMG_Init(flags);
+    if((initStatus & flags) != flags){
+        std::cout << "SDL2_Image format not available" << std::endl;
+    }
+    loadImage("mario.png");
 
 }
+void SDLGame::loadImage(std::string name){
 
+    std::string s = "Assets/"+name;
+    const int length = s.length();
+    
+    char* char_array = new char[length + 1];
+  
+    strcpy(char_array, s.c_str());
+
+    surface_ = IMG_Load(char_array);
+    if(!surface_){
+        std::cout << "Image not loaded..." << std::endl;
+    }
+
+    ourBG_ = SDL_CreateTextureFromSurface(renderer_, surface_);
+}
 SDLGame* SDLGame::GetInstance()
 {
 	if(instance==nullptr){
@@ -44,26 +66,21 @@ SDL_Window* SDLGame::getWindow(){
 SDL_Renderer* SDLGame::getRenderer(){
 	return renderer_;
 }
-
-/*TextureManager* SDLGame::getTextureManager(){
-	return textureManager_;
-}*/
-
-void SDLGame::initResources(){
-
-	//Crear e inicializar textureManager
-	/*textureManager_ = new TextureManager();
-	textureManager_->initObject();
-
-	//Creacion de las texturas
-	for (auto& image : Resources::imageRoutes) {
-		textureManager_->loadFromImg(image.textureId, renderer_, image.filename);
-	}*/
+SDL_Surface*SDLGame::getSurface(){
+    return surface_;
+}
+SDL_Texture *SDLGame::getTexture(){
+    return ourBG_;
 }
 
 void SDLGame::destroyWindow(){
-	//Destruimos textureManager
-	//delete textureManager_;
+
+    // liberamos superficie de la imagen
+    SDL_FreeSurface(surface_);
+    // destruimos la textura
+    SDL_DestroyTexture(ourBG_);
+
+    IMG_Quit();
 
     //Destruimos render y window
 	SDL_DestroyRenderer(renderer_);
@@ -71,6 +88,8 @@ void SDLGame::destroyWindow(){
 
 	renderer_ = nullptr;
 	window_ = nullptr;
+    surface_=nullptr;
+    ourBG_=nullptr;
 
 	//Cerramos SDL
 	SDL_Quit();

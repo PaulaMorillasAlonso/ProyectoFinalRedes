@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "../NetUtils/Socket.h"
+#include "../NetUtils/SDLGame.h"
 class GameClient
 {
 public:
@@ -39,8 +40,11 @@ public:
     Crea una pantalla de sdl para renderizado de tamaño w * h
     */
     void initClient(int w,int h);
+    void render() const;
+
 private:
 
+    SDLGame* game_;
     /**
      * Socket para comunicar con el servidor
      */
