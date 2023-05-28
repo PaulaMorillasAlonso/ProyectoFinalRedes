@@ -22,9 +22,9 @@ void GameClient::initClient(){
     game_= SDLGame::GetInstance();
     //Crea un jugador
     gameObject_= new GameObject();
-    //gameObject_->setTransform(0,0);
+    gameObject_->setTransform(0,0);
     gameObject_->setTexture("Assets/platform.png");
-    //gameObject_->setDimensions(40,20);
+    gameObject_->setDimensions(100,100);
 
 }
 void GameClient::logout()
@@ -70,7 +70,11 @@ void GameClient::render() const{
         SDL_RenderClear(game_->getRenderer());
 
         SDL_RenderCopy(game_->getRenderer(),game_->getTexture(),NULL,NULL);
-        SDL_RenderCopy(game_->getRenderer(),gameObject_->getTexture(),NULL,NULL);
+        SDL_Rect location = {gameObject_->getTransform().getX(),gameObject_->getTransform().getY(),
+                            gameObject_->getDimensions().getX(),gameObject_->getDimensions().getY()}; 
+     
+
+        SDL_RenderCopy(game_->getRenderer(),gameObject_->getTexture(),NULL,&location);
 
         // Renderizalo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());

@@ -23,25 +23,8 @@ void GameObject::setRotation(const float rot) {
 }
 
 void GameObject::setDimensions(int w, int h) {
-    int x = 570;  // X-coordinate of the position
-    int y = 400;  // Y-coordinate of the position
-
-    // Create a destination rectangle
-    SDL_Rect destinationRect;
-    destinationRect.x = x;            // Set the X-coordinate of the destination rectangle
-    destinationRect.y = y;            // Set the Y-coordinate of the destination rectangle
-
-    // Query the texture to get its width and height
-
-    SDL_QueryTexture(text_, NULL, NULL, &w, &h);
-
-    // Set the width and height of the destination rectangle to match the texture
-    destinationRect.w = w;  // Set the width of the destination rectangle
-    destinationRect.h = h; // Set the height of the destination rectangle
-
-    // Render the texture to the specified position
-    SDL_RenderCopy(game_->getRenderer(), text_, NULL, &destinationRect);
-    //dim_.set(w, h);
+    
+    dim_.set(w, h);
 
 }
 
@@ -73,10 +56,7 @@ SDL_Texture* GameObject::getTexture(){
 void GameObject::render()
 {
     assert(text_ != nullptr);
-    /*assert(texture_rect_!=nullptr);
-    SDL_RenderCopy(game_->getRenderer(), text_, NULL, texture_rect_); 
-    SDL_RenderPresent(game_->getRenderer()); */
-    //updates the renderer
+
     SDL_Rect src = build_sdlrect(0, 0, textDim_.getX(), textDim_.getY());
     SDL_Rect dest = build_sdlrect(tr_, dim_.getX(), dim_.getY());
     render(src, dest);
