@@ -1,17 +1,15 @@
-#ifndef GAME_OBJECT_H_
-#define GAME_OBJECT_H_
-
 #include <cassert>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "Vector2D.h"
+#include "../SDL_Utils/Vector2D.h"
 #include <string>
-
+#include "SDLGame.h"
 class GameObject {
 public:
 	GameObject() : tr_(), dim_(), rotation(0), text_(nullptr), textDim_() {
 		enabled_ = true;
+		game_=SDLGame::GetInstance();
 	}
 
 	virtual ~GameObject();
@@ -42,6 +40,7 @@ public:
 	Vector2D getDimensions() const;
 
 	void setTexture(const std::string& path);
+	SDL_Texture* getTexture();
 
 protected:
 
@@ -53,8 +52,9 @@ protected:
 
 	SDL_Texture* text_;
 	Vector2D textDim_;
-    
+    SDL_Rect *texture_rect_;
+
+    SDLGame *game_;
 	void render(const SDL_Rect &src, const SDL_Rect &dest,
             const SDL_Point *p = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 };
-#endif

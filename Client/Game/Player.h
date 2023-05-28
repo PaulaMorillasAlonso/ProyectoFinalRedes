@@ -1,7 +1,5 @@
-/*#ifndef PLAYER_H_
-#define PLAYER_H_
 
-#include "../../SDL_Utils/GameObject.h"
+/*#include "../../SDL_Utils/GameObject.h"
 #include "../GameClient.h"
 
 class Player : public GameObject {
@@ -34,4 +32,4 @@ private:
     MoodleJumpMessageClient::InputType key;
 	SDL_Scancode left_, right_;
 };
-#endif*/
+*/

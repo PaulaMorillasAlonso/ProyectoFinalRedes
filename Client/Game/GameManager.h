@@ -1,4 +1,4 @@
-#ifndef GAMEMANAGER_H
+/*#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -37,7 +37,7 @@ private:
 	Vector2D windowSize_;
 	Vector2D relativeSize_;
 };
-#endif
+#endif*/
 
 // This macro defines a compact way for using the singleton GameManager, instead of
 // writing GameManager::instance()->method() we write GameManager().method()

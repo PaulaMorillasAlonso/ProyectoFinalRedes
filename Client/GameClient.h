@@ -4,6 +4,10 @@
 #include <string>
 #include "../NetUtils/Socket.h"
 #include "../NetUtils/SDLGame.h"
+//#include "../NetUtils/GameObject.h"
+
+//#include "Game/Player.h"
+class GameObject;
 class GameClient
 {
 public:
@@ -39,8 +43,9 @@ public:
     /*
     Crea una pantalla de sdl para renderizado de tamaño w * h
     */
-    void initClient(int w,int h);
+    void initClient();
     void render() const;
+    
 
 private:
 
@@ -56,5 +61,8 @@ private:
     std::string nick;
 
     std::vector<std::thread> threads;
+    bool gameIsRunning_ = true;
+    GameObject * gameObject_=nullptr;
+    //Player * myPlayer_=nullptr;
 
 };

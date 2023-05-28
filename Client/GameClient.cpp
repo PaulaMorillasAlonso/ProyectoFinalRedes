@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../NetUtils/SDLGame.h"
+#include "Game/Player.h"
+#include "../NetUtils/GameObject.h"
 void GameClient::login()
 {
     std::string msg;
@@ -11,12 +13,19 @@ void GameClient::login()
     em.type = Message::LOGIN;
 
     socket.send(em, socket);
-    initClient(720,480);
+    initClient();
 
 }
-void GameClient::initClient(int w, int h){
+void GameClient::initClient(){
 
+    //Crea una ventana
     game_= SDLGame::GetInstance();
+    //Crea un jugador
+    gameObject_= new GameObject();
+    //gameObject_->setTransform(0,0);
+    gameObject_->setTexture("Assets/platform.png");
+    //gameObject_->setDimensions(40,20);
+
 }
 void GameClient::logout()
 {
@@ -31,26 +40,7 @@ void GameClient::logout()
 
 void GameClient::input_thread()
 {
-    while (true)
-    {
-        char buffer[Message::MESSAGE_SIZE];
-        std::cin.getline(buffer, Message::MESSAGE_SIZE);
-        if (strcmp(buffer, "q") == 0) {
-            logout();
-            break;
-        }
-        else {
-            Message msg(nick, buffer);
-            msg.type = Message::MESSAGE;
-            socket.send(msg, socket);
-        }
-    }
-}
-void GameClient::render() const{
-    // loop mientras no se cierre la ventana
-    bool gameIsRunning = true;
-    // Main application loop
-    while(gameIsRunning){
+    while(gameIsRunning_){
         SDL_Event event;
 
         // (1) Handle Input
@@ -58,19 +48,33 @@ void GameClient::render() const{
         while(SDL_PollEvent(&event)){
             // Handle each specific event
             if(event.type == SDL_QUIT){
-                gameIsRunning= false;
+                gameIsRunning_= false;
             }
 
         }
+        
+        //Message msg(nick, buffer);
+        //msg.type = Message::MESSAGE;
+        //socket.send(msg, socket);
+        
+    }
+    logout();
+}
+void GameClient::render() const{
+
+   if(gameIsRunning_){
+
+        //gameObject_->render();
         // (2) Handle Updates
         SDL_SetRenderDrawColor(game_->getRenderer(),0,0,0xFF,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(game_->getRenderer());
 
         SDL_RenderCopy(game_->getRenderer(),game_->getTexture(),NULL,NULL);
+        SDL_RenderCopy(game_->getRenderer(),gameObject_->getTexture(),NULL,NULL);
 
         // Renderizalo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());
-    }
+   }
     
 }
 void GameClient::net_thread()

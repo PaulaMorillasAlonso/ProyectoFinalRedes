@@ -9,7 +9,6 @@ int main(int argc, char **argv)
 
     ec.login();
     ec.render();
-
-    //ec.input_thread();
+    ec.input_thread();
 }
 

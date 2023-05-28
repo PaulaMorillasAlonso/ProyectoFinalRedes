@@ -41,6 +41,6 @@ public:
 	void destroyWindow();
 
     ///<summary>Constantes con las dimensiones de la ventana </summary>
-	static const int winWidth_ = 720;
-	static const int winHeight_ = 480; 
+	static const int winWidth_ = 1280;
+	static const int winHeight_ = 720; 
 };
