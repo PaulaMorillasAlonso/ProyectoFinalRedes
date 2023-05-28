@@ -3,6 +3,7 @@
 #include "../NetUtils/Message.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "../NetUtils/SDLGame.h"
 void GameClient::login()
 {
     std::string msg;
@@ -15,7 +16,7 @@ void GameClient::login()
 }
 void GameClient::initClient(int w, int h){
 
-    
+    SDLGame *g= SDLGame::GetInstance();
 	/* SDL_Window* window=nullptr;
 
     //Inicializa el subsistema de sdl
@@ -87,6 +88,7 @@ void GameClient::initClient(int w, int h){
 
     // Salimos.
     SDL_Quit();*/
+
 
   
 
