@@ -1,4 +1,5 @@
 #include "GameClient.h"
+
 #include "../NetUtils/Message.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -14,7 +15,8 @@ void GameClient::login()
 }
 void GameClient::initClient(int w, int h){
 
-	 SDL_Window* window=nullptr;
+    
+	/* SDL_Window* window=nullptr;
 
     //Inicializa el subsistema de sdl
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -84,7 +86,8 @@ void GameClient::initClient(int w, int h){
     IMG_Quit();
 
     // Salimos.
-    SDL_Quit();
+    SDL_Quit();*/
+
   
 
 }

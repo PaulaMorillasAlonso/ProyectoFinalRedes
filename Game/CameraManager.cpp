@@ -1,5 +1,4 @@
-/*#include "CameraManager.h"
-#include "../SDL_Utils/Environment.h"
+#include "CameraManager.h"
 
 #include <cassert>
 
@@ -13,9 +12,9 @@ CameraManager::~CameraManager() {
 void CameraManager::scrollY(float center) {
     float moveY = center - currentHeight_;
 
-    for (int i = 0; i < scrollingObjects_.size(); i++) {
+    /*for (int i = 0; i < scrollingObjects_.size(); i++) {
         scrollingObjects_[i].getTransform().setY(scrollingObjects_[i].getTransform().getY() + moveY);
         // if (scrollingObjects_[i].getTransform().getY() >? <?)
         // Si se sale de pantalla, desactivar.
-    }
-}*/
+    }*/
+}

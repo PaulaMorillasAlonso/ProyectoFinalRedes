@@ -1,4 +1,4 @@
-/*#ifndef GAMEMANAGER_H
+#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -11,7 +11,7 @@
 #include "../../SDL_Utils/Singleton.h"
 #include "../../SDL_Utils/RandomNumberGenerator.h"
 #include "../../SDL_Utils/macros.h"
-
+#include "../../SDL_Utils/Vector2D.h"
 
 class GameManager: public Singleton<GameManager> {
 
@@ -45,4 +45,4 @@ private:
 //
 inline GameManager& GameManager() {
 	return *GameManager::instance();
-}*/
+}

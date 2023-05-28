@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL_image.h>
 
-#include "Environment.h"
+
 #include "macros.h"
 
 GameObject::~GameObject() {
@@ -63,5 +63,5 @@ void GameObject::render()
 void GameObject::render(const SDL_Rect &src, const SDL_Rect &dest,
                 const SDL_Point *p, SDL_RendererFlip flip)
 {
-    SDL_RenderCopyEx(environment().renderer(), text_, &src, &dest, rotation, p, flip);
+    //SDL_RenderCopyEx(environment().renderer(), text_, &src, &dest, rotation, p, flip);
 }

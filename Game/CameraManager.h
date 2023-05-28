@@ -1,4 +1,4 @@
-/*#ifndef GAMEMANAGER_H
+#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -8,6 +8,8 @@
 #include "../../SDL_Utils/Singleton.h"
 #include "../../SDL_Utils/RandomNumberGenerator.h"
 #include "../../SDL_Utils/macros.h"
+#include "../../SDL_Utils/GameObject.h"
+#include "../../SDL_Utils/Vector2D.h"
 
 
 class CameraManager: public Singleton<CameraManager> {
@@ -43,4 +45,4 @@ private:
 //
 inline CameraManager& GameManager() {
 	return *CameraManager::instance();
-}*/
+}

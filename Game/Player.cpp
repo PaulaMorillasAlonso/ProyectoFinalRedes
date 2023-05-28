@@ -1,6 +1,6 @@
 /*#include "Player.h"
-
-Player::Player(GameClient* game) : GameObject(), vel_(), gravity(-9.8), jumpVel(50.0) {
+#include "GameManager.h"
+Player::Player(GameClient* game) : GameObject(), vel_(), gravity_(-9.8), jumpVel_(50.0) {
 	app_ = game;
 }
 
