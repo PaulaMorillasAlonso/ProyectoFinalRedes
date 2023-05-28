@@ -5,16 +5,15 @@
 #include <map>
 #include <vector>
 
-#include "../../SDL_Utils/Singleton.h"
+
 #include "../../SDL_Utils/RandomNumberGenerator.h"
 #include "../../SDL_Utils/macros.h"
 #include "../../SDL_Utils/GameObject.h"
 #include "../../SDL_Utils/Vector2D.h"
 
 
-class CameraManager: public Singleton<CameraManager> {
+class CameraManager {
 
-	friend Singleton<CameraManager> ; // needed to give access to private constructors
 
 public:
 
@@ -43,6 +42,6 @@ private:
 // This macro defines a compact way for using the singleton CameraManager, instead of
 // writing CameraManager::instance()->method() we write CameraManager().method()
 //
-inline CameraManager& GameManager() {
+/*inline CameraManager& GameManager() {
 	return *CameraManager::instance();
-}
+}*/

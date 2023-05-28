@@ -8,15 +8,14 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../../SDL_Utils/Singleton.h"
+
 #include "../../SDL_Utils/RandomNumberGenerator.h"
 #include "../../SDL_Utils/macros.h"
 #include "../../SDL_Utils/Vector2D.h"
 
-class GameManager: public Singleton<GameManager> {
+class GameManager{
 
-	friend Singleton<GameManager> ; // needed to give access to private constructors
-
+	
 public:
 
 	virtual ~GameManager();
@@ -43,6 +42,6 @@ private:
 // This macro defines a compact way for using the singleton GameManager, instead of
 // writing GameManager::instance()->method() we write GameManager().method()
 //
-inline GameManager& GameManager() {
+/*inline GameManager& GameManager() {
 	return *GameManager::instance();
-}
+}*/
