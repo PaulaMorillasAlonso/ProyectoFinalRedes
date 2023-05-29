@@ -6,8 +6,9 @@ public:
 
     Player(GameClient * client);
     ~Player();
-
-    /*void handleInput(const SDL_Event &event) override;
+    void setId(int id);
+    int getId();
+    /**void handleInput(const SDL_Event &event) override;
     void update() override;
     void render() override;
 

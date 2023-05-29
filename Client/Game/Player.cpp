@@ -5,7 +5,12 @@ Player::Player(GameClient * client) : GameObject(), vel_(), gravity_(-9.8), jump
 	//setTexture("Assets/player"+std::to_string(numPlayers)+".png");
 	client_=client;
 }
-
+void Player::setId(int id){
+	id_=id;
+}
+int Player::getId(){
+	return id_;
+}
 Player::~Player() {}
 
 /*void Player::handleInput(const SDL_Event &e) {

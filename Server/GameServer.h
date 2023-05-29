@@ -6,6 +6,7 @@
 #include <thread>
 #include <memory>
 #include "../NetUtils/Socket.h"
+
 class GameServer
 {
 public:
@@ -30,6 +31,7 @@ private:
     /**
      * Socket del servidor
      */
+    int playerId_=0;
     Socket socket;
 
 };

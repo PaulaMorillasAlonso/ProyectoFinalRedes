@@ -7,13 +7,15 @@ void Message::to_bin()
 
     memset(_data, 0, MESSAGE_SIZE);
 
-    //Serializar los campos type, nick y message en el buffer _data
+    //Serializar los campos type, nick, message y PlayerInfo en el buffer _data
     char* tmp = _data;
     memcpy(tmp, &type, sizeof(uint8_t));
     tmp += sizeof(uint8_t);
     memcpy(tmp, nick.c_str(), sizeof(char) * 8);
     tmp += sizeof(char) * 8;
     memcpy(tmp, message.c_str(), sizeof(char) * 80);
+    tmp+=sizeof(char)*80;
+    memcpy(tmp, &playerInfo, sizeof(PlayerInfo));
 
 }
 
@@ -33,6 +35,9 @@ int Message::from_bin(char* bobj)
     char m_buff[81] = { 0 };
     memcpy(m_buff, tmp, sizeof(char) * 80);
     message = std::string(m_buff);
+    tmp += sizeof(char) * 80;
+    memcpy(&playerInfo,tmp,sizeof(PlayerInfo));
+
     return 0;
 }
 

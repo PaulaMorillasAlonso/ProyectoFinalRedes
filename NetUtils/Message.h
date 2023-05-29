@@ -7,7 +7,7 @@
 
 #include "../NetUtils/Serializable.h"
 #include "../NetUtils/Socket.h"
-
+#include "PlayerInfo.h"
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -28,13 +28,14 @@
 class Message : public Serializable
 {
 public:
-    static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t);
+    static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t)+ sizeof(PlayerInfo);
 
     enum MessageType
     {
         LOGIN = 0,
-        MESSAGE = 1,
-        LOGOUT = 2
+        PLAYERINFO=1,
+        MESSAGE = 2,
+        LOGOUT = 3
     };
 
     Message() {};
@@ -44,9 +45,15 @@ public:
     void to_bin();
 
     int from_bin(char* bobj);
+    
+    void setPlayerInfo(const PlayerInfo& info){
+        playerInfo= info;
+        std::cout<<"PlayerInfo:"<<playerInfo.posX_<<"\n";
+    }
 
-    uint8_t type;
+    uint8_t type,id;
 
+    PlayerInfo playerInfo;
     std::string nick;
     std::string message;
 };

@@ -1,6 +1,7 @@
 #include "GameServer.h"
 #include "../NetUtils/Socket.h"
 #include "../NetUtils/Message.h"
+
 void GameServer::do_messages()
 {
     while (true)
@@ -28,7 +29,23 @@ void GameServer::do_messages()
             if (client_socket != nullptr) {
 
                 std::unique_ptr<Socket> new_client(client_socket);
+                PlayerInfo info;
+                info.id_=playerId_; //Siendo playerId la variable del servidor que controla el numero de clientes
+                //Si es el primer jugador
+                if(playerId_==0){
+                    info.posX_=300;
+                    info.posY_= 300;
+                }
+                else if(playerId_==1){ //es el segundo jugador
+                    info.posX_=500;
+                    info.posY_= 710;
+                }
+                msg.type=Message::PLAYERINFO;
+                msg.setPlayerInfo(info);
                 clients.push_back(std::move(new_client));
+                socket.send(msg, *client_socket);
+                playerId_++;
+
             }
         }
         else if (msg.type == Message::LOGOUT) { // - LOGOUT: Eliminar del vector clients
@@ -40,7 +57,7 @@ void GameServer::do_messages()
                 }
             }
         }
-        else { // - MESSAGE: Reenviar el mensaje a todos los clientes (menos el emisor)
+        else if (msg.type == Message::MESSAGE){ // - MESSAGE: Reenviar el mensaje a todos los clientes (menos el emisor)
 
             std::cout << msg.nick << " MESSAGE\n";
 
