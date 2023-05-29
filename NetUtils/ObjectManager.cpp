@@ -1,5 +1,5 @@
 #include "ObjectManager.h"
-
+#include "GameObject.h"
 void ObjectManager::addObject(GameObject* obj){
 
 allObjects_.insert( std::pair<std::string,GameObject*>(obj->getName(),obj));

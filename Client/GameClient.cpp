@@ -6,6 +6,7 @@
 #include "../NetUtils/SDLGame.h"
 #include "Game/Player.h"
 #include "../NetUtils/ObjectManager.h"
+
 void GameClient::login()
 {
     std::string msg;
@@ -22,8 +23,7 @@ void GameClient::initClient(){
     game_= SDLGame::GetInstance();
     objMan_= new ObjectManager();
 
-    //Crea un jugador
-    gameObject_= new GameObject();
+    /*gameObject_= new GameObject();
     gameObject_->setTransform(0,0);
     gameObject_->setTexture("Assets/platform.png");
     gameObject_->setDimensions(100,100);
@@ -35,8 +35,20 @@ void GameClient::initClient(){
     gameObject->setTransform(100,100);
     gameObject->setTexture("Assets/platform.png");
     gameObject->setDimensions(100,100);
-    objMan_->addObject(gameObject);
+    objMan_->addObject(gameObject);*/
 
+    //Crea un jugador
+    myPlayer1_= new Player(this);
+    myPlayer1_->setTexture("Assets/player1.png");
+    myPlayer1_->setTransform(200,300);
+    myPlayer1_->setDimensions(100,100);
+    objMan_->addObject(myPlayer1_);
+
+    myPlayer2_= new Player(this);
+    myPlayer2_->setTexture("Assets/player2.png");
+    myPlayer2_->setTransform(500,300);
+    myPlayer2_->setDimensions(100,100);
+    objMan_->addObject(myPlayer2_);
 
 }
 void GameClient::logout()

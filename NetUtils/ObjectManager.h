@@ -1,6 +1,6 @@
 
-#include "GameObject.h"
-
+//#include "GameObject.h"
+class GameObject;
 #include <map>
 
 class ObjectManager{

@@ -1,12 +1,14 @@
-/*#include "Player.h"
-#include "GameManager.h"
-Player::Player(GameClient* game) : GameObject(), vel_(), gravity_(-9.8), jumpVel_(50.0) {
-	app_ = game;
+#include "Player.h"
+#include "../GameClient.h"
+
+Player::Player(GameClient * client) : GameObject(), vel_(), gravity_(-9.8), jumpVel_(50.0) {
+	//setTexture("Assets/player"+std::to_string(numPlayers)+".png");
+	client_=client;
 }
 
 Player::~Player() {}
 
-void Player::handleInput(const SDL_Event &e) {
+/*void Player::handleInput(const SDL_Event &e) {
 	if (e.type == SDL_KEYDOWN){
 		key = MoodleJumpMessageClient::InputType::NONE;
 		

@@ -9,6 +9,7 @@
 //#include "Game/Player.h"
 class GameObject;
 class ObjectManager;
+class Player;
 class GameClient
 {
 public:
@@ -64,6 +65,7 @@ private:
     std::vector<std::thread> threads;
     bool gameIsRunning_ = true;
     GameObject * gameObject_=nullptr;
-    //Player * myPlayer_=nullptr;
+    Player * myPlayer1_=nullptr;
+    Player * myPlayer2_=nullptr;
     ObjectManager * objMan_;
 };
