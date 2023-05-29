@@ -50,8 +50,10 @@ public:
         playerInfo= info;
         std::cout<<"PlayerInfo:"<<playerInfo.posX_<<"\n";
     }
-
-    uint8_t type,id;
+    PlayerInfo getPlayerInfo()const{
+        return playerInfo;
+    }
+    uint8_t type;
 
     PlayerInfo playerInfo;
     std::string nick;

@@ -12,6 +12,7 @@ class GameServer
 public:
     GameServer(const char* s, const char* p) : socket(s, p)
     {
+        playerId_=0;
         socket.bind();
     };
 
@@ -31,7 +32,7 @@ private:
     /**
      * Socket del servidor
      */
-    int playerId_=0;
+    int playerId_;
     Socket socket;
 
 };

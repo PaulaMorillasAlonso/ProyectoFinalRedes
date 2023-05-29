@@ -30,21 +30,27 @@ void GameServer::do_messages()
 
                 std::unique_ptr<Socket> new_client(client_socket);
                 PlayerInfo info;
-                info.id_=playerId_; //Siendo playerId la variable del servidor que controla el numero de clientes
+                 //Siendo playerId la variable del servidor que controla el numero de clientes
                 //Si es el primer jugador
+                std::cout<<"PlayerID: "<<std::to_string(playerId_)<<std::endl;
                 if(playerId_==0){
-                    info.posX_=300;
+                    std::cout<<"Soy el primer jugador"<<std::endl;
+                    info.posX_=10;
                     info.posY_= 300;
                 }
                 else if(playerId_==1){ //es el segundo jugador
-                    info.posX_=500;
-                    info.posY_= 710;
+                    std::cout<<"Soy el segundo jugador"<<std::endl;
+                    info.posX_=700;
+                    info.posY_= 500;
+                  
                 }
+                info.id_=playerId_;
+                playerId_++;
                 msg.type=Message::PLAYERINFO;
                 msg.setPlayerInfo(info);
                 clients.push_back(std::move(new_client));
                 socket.send(msg, *client_socket);
-                playerId_++;
+
 
             }
         }

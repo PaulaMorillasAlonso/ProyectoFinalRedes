@@ -1,5 +1,5 @@
 struct PlayerInfo{
     int id_;
-    float posX_;
-    float posY_;
+    int posX_;
+    int posY_;
 };
