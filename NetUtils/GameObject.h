@@ -7,11 +7,9 @@
 #include "SDLGame.h"
 class GameObject {
 public:
-	GameObject() : tr_(), dim_(), rotation(0), text_(nullptr), textDim_() {
-		enabled_ = true;
-		game_=SDLGame::GetInstance();
-	}
-
+	static int numObjects;
+	GameObject();
+	GameObject(std::string name);
 	virtual ~GameObject();
 
 	virtual void handleInput(const SDL_Event &event) {};
@@ -41,9 +39,10 @@ public:
 
 	void setTexture(const std::string& path);
 	SDL_Texture* getTexture();
+	std::string getName();
 
 protected:
-
+	std::string name_="";
 	Vector2D tr_;
 	Vector2D dim_;
 

@@ -8,6 +8,7 @@
 
 //#include "Game/Player.h"
 class GameObject;
+class ObjectManager;
 class GameClient
 {
 public:
@@ -64,5 +65,5 @@ private:
     bool gameIsRunning_ = true;
     GameObject * gameObject_=nullptr;
     //Player * myPlayer_=nullptr;
-
+    ObjectManager * objMan_;
 };

@@ -11,13 +11,7 @@ private:
 	SDL_Renderer* renderer_ = nullptr;
 	SDL_Surface* surface_ = nullptr;
 
-	///<summary>Manager que gestiona las texturas </summary>
-	//TextureManager* textureManager_ = nullptr;
-
     void initSDL();
-	///<summary>Metodo que inicializa los recursos de la app</summary>
-	//void initResources();
-
 
 	SDLGame();
 

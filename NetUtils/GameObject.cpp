@@ -3,7 +3,19 @@
 #include <SDL2/SDL_image.h>
 #include "SDLGame.h"
 #include "../SDL_Utils/macros.h"
+int GameObject::numObjects=0;
 
+GameObject::GameObject() : tr_(), dim_(), rotation(0), text_(nullptr), textDim_() {
+		enabled_ = true;
+		game_=SDLGame::GetInstance();
+		numObjects++;
+}
+GameObject::GameObject(std::string name) : tr_(), dim_(), rotation(0), text_(nullptr), textDim_() {
+		enabled_ = true;
+		game_=SDLGame::GetInstance();
+		name_=name;
+		numObjects++;
+}
 GameObject::~GameObject() {
     if(text_ != nullptr)
         SDL_DestroyTexture(text_);
@@ -46,7 +58,9 @@ void GameObject::setTexture(const std::string &path) {
         SDL_FreeSurface(surface);
         throw "Couldn't load image: " + path;
     }
-    
+    if(name_==""){
+        name_=path+std::to_string(numObjects);
+    }
 
     SDL_FreeSurface(surface);
 }
@@ -67,4 +81,7 @@ void GameObject::render(const SDL_Rect &src, const SDL_Rect &dest,
 {
     game_->GetInstance();
     SDL_RenderCopyEx(game_->getRenderer(), text_, &src, &dest, rotation, p, flip);
+}
+std::string GameObject::getName(){
+    return name_;
 }
