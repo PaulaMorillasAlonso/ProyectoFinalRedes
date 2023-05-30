@@ -40,7 +40,8 @@ public:
     {
         LOGIN = 0,
         MESSAGE = 1,
-        LOGOUT = 2
+        LOGOUT = 2,
+        INIPLAYER=3
  
     };
 

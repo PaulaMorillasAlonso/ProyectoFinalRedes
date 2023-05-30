@@ -126,15 +126,22 @@ void GameClient::net_thread()
         switch (message.type)
         {
             
-            case Message::MessageType::LOGIN:
+            case Message::MessageType::INIPLAYER:
             {
                 PlayerInfo p = message.playerInfo;
 
                 if (message.nick!= myPlayer_->getNick())
+                {
                     playersInfo_[message.nick] = p;
+                    std::cout<<"La otra posicion X es: "<<std::to_string(p.posX_)<<"\n";
+                    std::cout<<"La otra posicion Y es: "<<std::to_string(p.posY_)<<"\n";
+                }
                 else
                 {
                     myPlayer_->setTransform(p.posX_,p.posY_);
+                    std::cout<<"Mi posicion X es: "<<std::to_string(p.posX_)<<"\n";
+                    std::cout<<"Mi posicion Y es: "<<std::to_string(p.posY_)<<"\n";
+
                 }
 
                 break;

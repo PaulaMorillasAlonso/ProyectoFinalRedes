@@ -43,28 +43,39 @@ void GameServer::do_messages()
                 clients[msg.nick]=std::move(new_client);
                 PlayerInfo info;
                 info.posX_ = rand()%(670-50 + 1) + 50;
-                info.posY_= 100;
+                info.posY_= rand()%(430-50 + 1) + 50;
                 info.w_=50;
                 info.h_=50;
                 players[msg.nick]=info;
-                msg.playerInfo=info;
 
-                //Vamos a enviar un mensaje al los clientes con su informacion de inicio
+                Message newPlayer;
+                newPlayer.type= Message::MessageType::INIPLAYER;
+                newPlayer.nick=msg.nick;
+                newPlayer.playerInfo=players[msg.nick];
+
+                //Vamos a enviar un mensaje al cliente con su informacion de inicio
+                socket.send(newPlayer, *client_socket);
+                auto itPlayers=players.begin();
                 for (auto it = clients.begin(); it != clients.end(); it++)
                 {
-                    socket.send(msg, *((*it).second.get()));
+                    if((*itPlayers).first!=newPlayer.nick){
+                        socket.send(newPlayer, *((*it).second.get()));
+                    }
+                    ++itPlayers;
                 }
             
-                //Avisar al nuevo de la posicion del contrario
+                //Avisar de la posicion del contrario
+                
                 for (auto it = players.begin(); it != players.end(); ++it)
                 {   
-                    //Si tiene un nick distinto al mio (es otro jugador)
-                    if ((*it).first != msg.nick)
+                    //Si tiene un nick distinto al mio (es otro jugador) mandame su informacion
+                    if ((*it).first != newPlayer.nick)
                     {
-                        msg.nick=(*it).first;
-                        msg.playerInfo=(*it).second;
-                        socket.send(msg,*client_socket);
+                        newPlayer.nick=(*it).first;
+                        newPlayer.playerInfo=(*it).second;
+                        socket.send(newPlayer,*client_socket);
                     }
+                    //++clientIt;
                 }
             }
        
