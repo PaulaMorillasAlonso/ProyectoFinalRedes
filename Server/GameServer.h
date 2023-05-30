@@ -7,14 +7,11 @@
 #include <memory>
 #include "../NetUtils/Socket.h"
 
+struct PlayerInfo;
 class GameServer
 {
 public:
-    GameServer(const char* s, const char* p) : socket(s, p)
-    {
-        playerId_=0;
-        socket.bind();
-    };
+    GameServer(const char* s, const char* p);
 
     /**
      *  Thread principal del servidor recive mensajes en el socket y
@@ -28,7 +25,7 @@ private:
      *  su socket
      */
     std::vector<std::unique_ptr<Socket>> clients;
-
+    PlayerInfo* players;
     /**
      * Socket del servidor
      */

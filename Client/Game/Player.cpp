@@ -3,7 +3,7 @@
 
 Player::Player(GameClient * client) : GameObject(), vel_(), gravity_(-9.8), jumpVel_(50.0) {
 	//setTexture("Assets/player"+std::to_string(numPlayers)+".png");
-	setDimensions(300,300);
+	setDimensions(50,50);
 	client_=client;
 }
 void Player::setId(int id){

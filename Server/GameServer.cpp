@@ -2,6 +2,12 @@
 #include "../NetUtils/Socket.h"
 #include "../NetUtils/Message.h"
 
+GameServer::GameServer(const char* s, const char* p) : socket(s, p)
+{
+        playerId_=0;
+        players=(PlayerInfo*)malloc(sizeof(PlayerInfo)*2);
+        socket.bind();
+};
 void GameServer::do_messages()
 {
     while (true)
@@ -17,11 +23,14 @@ void GameServer::do_messages()
          //Socket *client_socket;
          //ChatMessage msg;
 
-        Socket* client_socket;
+        Socket* client_socket=new Socket(socket);
         Message msg;
 
-        int client_fd = socket.recv(msg, client_socket);
-
+        //Esperamos recibir un mensaje de cualquier socket
+        if (socket.recv(msg, client_socket) == -1)
+        {
+            std::cout << "Error al recibir el mensaje\n";
+        }
 
         if (msg.type == Message::LOGIN) {  // - LOGIN: Añadir al vector clients
 
@@ -32,27 +41,46 @@ void GameServer::do_messages()
                 PlayerInfo info;
                  //Siendo playerId la variable del servidor que controla el numero de clientes
                 //Si es el primer jugador
-                std::cout<<"PlayerID: "<<std::to_string(playerId_)<<std::endl;
                 if(playerId_==0){
-                    std::cout<<"Soy el primer jugador"<<std::endl;
+  
                     info.posX_=10;
                     info.posY_= 300;
                 }
                 else if(playerId_==1){ //es el segundo jugador
-                    std::cout<<"Soy el segundo jugador"<<std::endl;
+              
                     info.posX_=700;
-                    info.posY_= 500;
+                    info.posY_= 200;
                   
                 }
                 info.id_=playerId_;
                 playerId_++;
-                msg.type=Message::PLAYERINFO;
-                msg.setPlayerInfo(info);
+  
+                players[playerId_]=info;
+
+                Message myMessage;
+                myMessage.type=Message::PLAYERINFO;
                 clients.push_back(std::move(new_client));
-                socket.send(msg, *client_socket);
-
-
+                myMessage.setPlayerInfo(info);
+            
+                std::cout<<"Estoy aqui\n";
+                //Avisar a todos los jugadores conectados que ha entrado uno nuevo
+                for (int i = 0; i < clients.size(); ++i) {
+                    std::cout<<"Bucle 1: Mandando la info del que tiene id: "+std::to_string(players[i].id_)<<std::endl;
+                    
+                    socket.send(myMessage, *clients[i]);
+                
+                }
+                //Avisar al que ha entrado de donde estan el resto
+                for (int i = 0; i < clients.size(); ++i) {
+                if (!((*clients[i]) == (*client_socket))) {
+                        myMessage.setPlayerInfo(players[i]);
+                        std::cout<<"Bucle 2: Mandando la info del que tiene id: "+std::to_string(players[i].id_)<<std::endl;
+                        socket.send(myMessage, *clients[i]);
+                    }
+                }
             }
+       
+            
         }
         else if (msg.type == Message::LOGOUT) { // - LOGOUT: Eliminar del vector clients
             std::cout << msg.nick << " LOGOUT\n";

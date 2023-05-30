@@ -38,13 +38,13 @@ void GameClient::initClient(){
     objMan_->addObject(gameObject);*/
 
     //Crea un jugador
-    myPlayer1_= new Player(this);
-    myPlayer1_->setTexture("Assets/player1.png");
-    objMan_->addObject(myPlayer1_);
+    myPlayers_[0]= new Player(this);
+    myPlayers_[0]->setTexture("Assets/player1.png");
+    objMan_->addObject(myPlayers_[0]);
 
-    myPlayer2_= new Player(this);
-    myPlayer2_->setTexture("Assets/player2.png");
-    objMan_->addObject(myPlayer2_);
+    myPlayers_[1]= new Player(this);
+    myPlayers_[1]->setTexture("Assets/player2.png");
+    objMan_->addObject(myPlayers_[1]);
 
 }
 void GameClient::logout()
@@ -101,10 +101,9 @@ void GameClient::render() const{
        
     }
         
-
         // Renderiza lo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());
-        SDL_UpdateWindowSurface(game_->getWindow());
+        //SDL_UpdateWindowSurface(game_->getWindow());
    }
     
 }
@@ -123,22 +122,13 @@ void GameClient::net_thread()
             {
                 std::cout <<"HE entrado\n";
                 std::cout <<"Mi id:"<< std::to_string(message.playerInfo.id_)<<std::endl;
-                if(message.playerInfo.id_==0){
-                    myPlayer1_->setId(0);
-                    myPlayer1_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+
+                    myPlayers_[message.playerInfo.id_]->setId(message.playerInfo.id_);
+                    myPlayers_[message.playerInfo.id_]->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+
                     std::cout<<"Soy el player con id: "<<std::to_string(message.playerInfo.id_)<< "y mi posicion es: "<< 
                     std::to_string(message.playerInfo.posX_)<<" , "<< std::to_string(message.playerInfo.posY_);
           
-                }
-                else if(message.playerInfo.id_==1){
-                    myPlayer2_->setId(1);
-                    myPlayer2_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
-                    std::cout<<"Soy el player con id: "<<std::to_string(message.playerInfo.id_)<< "y mi posicion es: "<< 
-                    std::to_string(message.playerInfo.posX_)<<" , "<< std::to_string(message.playerInfo.posY_);
-                }
-                else
-                    std::cout <<"No ha entrado en ninguno\n";
-
                 break;
             }
            

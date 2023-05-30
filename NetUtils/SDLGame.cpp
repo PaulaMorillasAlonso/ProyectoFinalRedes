@@ -19,7 +19,7 @@ void SDLGame::initSDL(){
 	// InicializaciOn del sistema, ventana y renderer
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window_ = SDL_CreateWindow("Moodle Jump!", winX, winY, winWidth_,
-		winHeight_,SDL_WINDOW_SHOWN);
+		winHeight_,SDL_WINDOW_RESIZABLE);
 	  
 
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED| SDL_RENDERER_PRESENTVSYNC);

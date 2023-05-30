@@ -64,7 +64,7 @@ private:
 
     std::vector<std::thread> threads;
     bool gameIsRunning_ = true;
-    Player * myPlayer1_=nullptr;
-    Player * myPlayer2_=nullptr;
+    Player * myPlayers_[2];
+    
     ObjectManager * objMan_;
 };
