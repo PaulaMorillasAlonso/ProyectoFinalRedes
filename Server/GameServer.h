@@ -2,12 +2,12 @@
 #include <string>
 #include <unistd.h>
 #include <string.h>
-#include <vector>
+#include <map>
 #include <thread>
 #include <memory>
 #include "../NetUtils/Socket.h"
+#include "../NetUtils/Message.h"
 
-struct PlayerInfo;
 class GameServer
 {
 public:
@@ -24,12 +24,13 @@ private:
      *  Lista de clientes conectados al servidor de Chat, representados por
      *  su socket
      */
-    std::vector<std::unique_ptr<Socket>> clients;
-    PlayerInfo* players;
+    std::map<std::string,std::unique_ptr<Socket>> clients;
+    std::map<std::string, PlayerInfo> players;
     /**
      * Socket del servidor
      */
-    int playerId_;
+
     Socket socket;
+
 
 };

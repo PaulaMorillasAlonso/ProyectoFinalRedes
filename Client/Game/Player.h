@@ -1,13 +1,16 @@
 #include "../../NetUtils/GameObject.h"
+#include <string>
 class GameClient;
 class Player : public GameObject {
 
 public:
 
-    Player(GameClient * client);
+    Player(std::string nickname);
     ~Player();
-    void setId(int id);
-    int getId();
+
+    std::string getNick(){
+        return nick_;
+    };
     /**void handleInput(const SDL_Event &event) override;
     void update() override;
     void render() override;
@@ -25,11 +28,12 @@ public:
 private:
 
     GameClient *client_;
-    int id_;
+
     Vector2D vel_;
     float gravity_;
     float jumpVel_;
 
+    std::string nick_;
     //MoodleJumpMessageClient::InputType key;
 	SDL_Scancode left_, right_,up_;
 };

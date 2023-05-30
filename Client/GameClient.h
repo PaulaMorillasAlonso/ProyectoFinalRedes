@@ -1,9 +1,12 @@
 #include <thread>
 #include <memory>
 #include <vector>
+#include <map>
 #include <string>
 #include "../NetUtils/Socket.h"
 #include "../NetUtils/SDLGame.h"
+#include "../NetUtils/Message.h"
+
 //#include "../NetUtils/GameObject.h"
 
 //#include "Game/Player.h"
@@ -18,8 +21,8 @@ public:
      * @param p puerto del servidor
      * @param n nick del usuario
      */
-    GameClient(const char* s, const char* p, const char* n) :socket(s, p),
-        nick(n) {};
+    GameClient(const char* s, const char* p, const char* name) :socket(s, p),
+        nick(name) {myNick_=name;};
 
     /**
      *  Envía el mensaje de login al servidor
@@ -63,8 +66,12 @@ private:
     std::string nick;
 
     std::vector<std::thread> threads;
+    //Inforacin de los jugadores, similar a la del servidor
+    std::map<std::string, PlayerInfo> playersInfo_;
+
     bool gameIsRunning_ = true;
-    Player * myPlayers_[2];
-    
+
+    Player * myPlayer_;
+    std::string myNick_;
     ObjectManager * objMan_;
 };

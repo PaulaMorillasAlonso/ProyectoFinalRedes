@@ -7,7 +7,7 @@
 
 #include "../NetUtils/Serializable.h"
 #include "../NetUtils/Socket.h"
-#include "PlayerInfo.h"
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -25,17 +25,21 @@
  *  +-------------------+
  *
  */
+struct PlayerInfo{
+    int id_;
+    int posX_;
+    int posY_;
+};
 class Message : public Serializable
 {
 public:
-    static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t)+ sizeof(PlayerInfo);
 
     enum MessageType
     {
         LOGIN = 0,
-        PLAYERINFO=1,
-        MESSAGE = 2,
-        LOGOUT = 3
+        MESSAGE = 1,
+        LOGOUT = 2
+ 
     };
 
     Message() {};
@@ -46,13 +50,6 @@ public:
 
     int from_bin(char* bobj);
     
-    void setPlayerInfo(const PlayerInfo& info){
-        playerInfo= info;
-        std::cout<<"PlayerInfo:"<<playerInfo.posX_<<"\n";
-    }
-    PlayerInfo getPlayerInfo()const{
-        return playerInfo;
-    }
     uint8_t type;
 
     PlayerInfo playerInfo;

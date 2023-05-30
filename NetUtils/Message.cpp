@@ -1,6 +1,9 @@
 #include "Message.h"
 #include <string>
 
+
+static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t)+ sizeof(PlayerInfo);
+
 void Message::to_bin()
 {
     alloc_data(MESSAGE_SIZE);

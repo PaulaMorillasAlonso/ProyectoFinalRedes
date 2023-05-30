@@ -1,6 +1,5 @@
 #include "GameClient.h"
 
-#include "../NetUtils/Message.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../NetUtils/SDLGame.h"
@@ -38,13 +37,11 @@ void GameClient::initClient(){
     objMan_->addObject(gameObject);*/
 
     //Crea un jugador
-    myPlayers_[0]= new Player(this);
-    myPlayers_[0]->setTexture("Assets/player1.png");
-    objMan_->addObject(myPlayers_[0]);
+    myPlayer_= new Player(myNick_);
+    myPlayer_->setTexture("Assets/player1.png");
+    objMan_->addObject(myPlayer_);
 
-    myPlayers_[1]= new Player(this);
-    myPlayers_[1]->setTexture("Assets/player2.png");
-    objMan_->addObject(myPlayers_[1]);
+
 
 }
 void GameClient::logout()
@@ -118,17 +115,18 @@ void GameClient::net_thread()
         
         switch (message.type)
         {
-            case Message::MessageType::PLAYERINFO:
+            
+            case Message::MessageType::LOGIN:
             {
-                std::cout <<"HE entrado\n";
-                std::cout <<"Mi id:"<< std::to_string(message.playerInfo.id_)<<std::endl;
+                PlayerInfo p = message.playerInfo;
 
-                    myPlayers_[message.playerInfo.id_]->setId(message.playerInfo.id_);
-                    myPlayers_[message.playerInfo.id_]->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                if (message.nick!= myPlayer_->getNick())
+                    playersInfo_[message.nick] = p;
+                else
+                {
+                    myPlayer_->setTransform(p.posX_,p.posY_);
+                }
 
-                    std::cout<<"Soy el player con id: "<<std::to_string(message.playerInfo.id_)<< "y mi posicion es: "<< 
-                    std::to_string(message.playerInfo.posX_)<<" , "<< std::to_string(message.playerInfo.posY_);
-          
                 break;
             }
            
