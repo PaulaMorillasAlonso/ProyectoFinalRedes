@@ -32,6 +32,8 @@ public:
 	void setWindowSize(Vector2D limit);
     void scrollY(float center);
 
+	void addScrollingObject(GameObject* obj);
+
 private:
 	CameraManager();
     std::vector<GameObject*> scrollingObjects_;

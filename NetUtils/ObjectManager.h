@@ -2,6 +2,7 @@
 //#include "GameObject.h"
 class GameObject;
 #include <map>
+#include <string>
 
 class ObjectManager{
 
