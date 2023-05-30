@@ -85,18 +85,28 @@ void GameClient::render() const{
         SDL_SetRenderDrawColor(game_->getRenderer(),0,0,0xFF,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(game_->getRenderer());
 
-        SDL_RenderCopy(game_->getRenderer(),game_->getTexture(),NULL,NULL);
+        SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
 
-        //Pintado de los GameObjects
+        
+        //Pintado de los GameObjects y mi jugador
         for (const auto& pair : objMan_->getObjects()) {
       
-        GameObject * obj = pair.second;
-        SDL_Rect location = {obj->getTransform().getX(),obj->getTransform().getY(),
-                            obj->getDimensions().getX(),obj->getDimensions().getY()}; 
+            GameObject * obj = pair.second;
+            SDL_Rect location = {obj->getTransform().getX(),obj->getTransform().getY(),
+                                obj->getDimensions().getX(),obj->getDimensions().getY()}; 
      
-        SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
+            SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
        
-    }
+        }
+        //Pintado de otros jugadores (en este caso solo hay otro jugador y se podria pintar directamente, pero hago un bucle en caso de que hubiera mas)
+        for (auto it = playersInfo_.begin(); it != playersInfo_.end(); ++it)
+        {
+            PlayerInfo p = (*it).second;
+            SDL_Rect location = {p.posX_,p.posY_,p.w_,p.h_}; 
+            
+            SDL_RenderCopy(game_->getRenderer(),game_->getOtherPlayerTexture(),NULL,&location);
+       
+        }
         
         // Renderiza lo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());

@@ -17,6 +17,8 @@ private:
 
 	static SDLGame* instance;
 	SDL_Texture* ourBG_;
+	SDL_Texture* otherPlayer_;
+
 public:
   
   	static SDLGame* GetInstance();
@@ -28,10 +30,11 @@ public:
 
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
-	void loadImage(std::string name);
+	SDL_Texture* loadImage(std::string name);
 	SDL_Surface* getSurface();
 
-	SDL_Texture * getTexture();
+	SDL_Texture * getBGTexture();
+	SDL_Texture * getOtherPlayerTexture();
 	void destroyWindow();
 
     ///<summary>Constantes con las dimensiones de la ventana </summary>

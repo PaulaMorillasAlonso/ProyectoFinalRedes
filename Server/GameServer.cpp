@@ -44,6 +44,8 @@ void GameServer::do_messages()
                 PlayerInfo info;
                 info.posX_ = rand()%(670-50 + 1) + 50;
                 info.posY_= 100;
+                info.w_=50;
+                info.h_=50;
                 players[msg.nick]=info;
                 msg.playerInfo=info;
 
@@ -53,22 +55,17 @@ void GameServer::do_messages()
                     socket.send(msg, *((*it).second.get()));
                 }
             
-                /*std::cout<<"Estoy aqui\n";
-                //Avisar a todos los jugadores conectados que ha entrado uno nuevo
-                for (int i = 0; i < clients.size(); ++i) {
-                    std::cout<<"Bucle 1: Mandando la info del que tiene id: "+std::to_string(players[i].id_)<<std::endl;
-                    
-                    socket.send(myMessage, *clients[i]);
-                
-                }
-                //Avisar al que ha entrado de donde estan el resto
-                for (int i = 0; i < clients.size(); ++i) {
-                if (!((*clients[i]) == (*client_socket))) {
-                        myMessage.setPlayerInfo(players[i]);
-                        std::cout<<"Bucle 2: Mandando la info del que tiene id: "+std::to_string(players[i].id_)<<std::endl;
-                        socket.send(myMessage, *clients[i]);
+                //Avisar al nuevo de la posicion del contrario
+                for (auto it = players.begin(); it != players.end(); ++it)
+                {   
+                    //Si tiene un nick distinto al mio (es otro jugador)
+                    if ((*it).first != msg.nick)
+                    {
+                        msg.nick=(*it).first;
+                        msg.playerInfo=(*it).second;
+                        socket.send(msg,*client_socket);
                     }
-                }*/
+                }
             }
        
             

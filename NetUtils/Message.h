@@ -29,6 +29,8 @@ struct PlayerInfo{
     int id_;
     int posX_;
     int posY_;
+    int w_;
+    int h_;
 };
 class Message : public Serializable
 {

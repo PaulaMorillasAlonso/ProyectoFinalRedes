@@ -32,10 +32,10 @@ void SDLGame::initSDL(){
     if((initStatus & flags) != flags){
         std::cout << "SDL2_Image format not available" << std::endl;
     }
-    loadImage("mario.png");
+    ourBG_=loadImage("mario.png");
 
 }
-void SDLGame::loadImage(std::string name){
+SDL_Texture * SDLGame::loadImage(std::string name){
 
     std::string s = "Assets/"+name;
     const int length = s.length();
@@ -49,7 +49,9 @@ void SDLGame::loadImage(std::string name){
         std::cout << "Image not loaded..." << std::endl;
     }
 
-    ourBG_ = SDL_CreateTextureFromSurface(renderer_, surface_);
+    SDL_Texture *txt = SDL_CreateTextureFromSurface(renderer_, surface_);
+
+    return txt;
 }
 SDLGame* SDLGame::GetInstance()
 {
@@ -69,8 +71,12 @@ SDL_Renderer* SDLGame::getRenderer(){
 SDL_Surface*SDLGame::getSurface(){
     return surface_;
 }
-SDL_Texture *SDLGame::getTexture(){
+SDL_Texture *SDLGame::getBGTexture(){
     return ourBG_;
+}
+SDL_Texture *SDLGame::getOtherPlayerTexture(){
+    otherPlayer_=loadImage("player2.png");
+    return otherPlayer_;
 }
 
 void SDLGame::destroyWindow(){
