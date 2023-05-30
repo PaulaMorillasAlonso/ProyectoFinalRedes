@@ -9,6 +9,10 @@ CameraManager::CameraManager() {
 CameraManager::~CameraManager() {
 }
 
+CameraManager::addScrollingObject(GameObject* obj) {
+    scrollingObjects.push_back(obj);
+}
+
 void CameraManager::scrollY(float center) {
     float moveY = center - currentHeight_;
 
