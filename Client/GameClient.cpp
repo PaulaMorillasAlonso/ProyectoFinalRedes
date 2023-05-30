@@ -57,7 +57,6 @@ void GameClient::logout()
 
 void GameClient::input_thread()
 {
-    while(gameIsRunning_){
         SDL_Event event;
 
         // (1) Handle Input
@@ -66,6 +65,8 @@ void GameClient::input_thread()
             // Handle each specific event
             if(event.type == SDL_QUIT){
                 gameIsRunning_= false;
+                logout();
+
             }
 
         }
@@ -74,12 +75,9 @@ void GameClient::input_thread()
         //msg.type = Message::MESSAGE;
         //socket.send(msg, socket);
         
-    }
-    logout();
 }
 void GameClient::render() const{
 
-   if(gameIsRunning_){
 
         //Pintado de fondo
         SDL_SetRenderDrawColor(game_->getRenderer(),0,0,0xFF,SDL_ALPHA_OPAQUE);
@@ -88,7 +86,7 @@ void GameClient::render() const{
         SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
 
         
-        //Pintado de los GameObjects y mi jugador
+        //Pintado de los GameObjects y jugadores
         for (const auto& pair : objMan_->getObjects()) {
       
             GameObject * obj = pair.second;
@@ -98,20 +96,11 @@ void GameClient::render() const{
             SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
        
         }
-        //Pintado de otros jugadores (en este caso solo hay otro jugador y se podria pintar directamente, pero hago un bucle en caso de que hubiera mas)
-        for (auto it = playersInfo_.begin(); it != playersInfo_.end(); ++it)
-        {
-            PlayerInfo p = (*it).second;
-            SDL_Rect location = {p.posX_,p.posY_,p.w_,p.h_}; 
-            
-            SDL_RenderCopy(game_->getRenderer(),game_->getOtherPlayerTexture(),NULL,&location);
-       
-        }
-        
+
         // Renderiza lo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());
-        //SDL_UpdateWindowSurface(game_->getWindow());
-   }
+        SDL_UpdateWindowSurface(game_->getWindow());
+   
     
 }
 void GameClient::net_thread()
@@ -119,7 +108,6 @@ void GameClient::net_thread()
 
     while (true)
     {
-
         Message message;
         socket.recv(message);
         
@@ -133,6 +121,11 @@ void GameClient::net_thread()
                 if (message.nick!= myPlayer_->getNick())
                 {
                     playersInfo_[message.nick] = p;
+                    Player *player= new Player(message.nick);
+                    player->setTexture("Assets/player2.png");
+                    player->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                    objMan_->addObject(player);
+
                     std::cout<<"La otra posicion X es: "<<std::to_string(p.posX_)<<"\n";
                     std::cout<<"La otra posicion Y es: "<<std::to_string(p.posY_)<<"\n";
                 }
@@ -151,4 +144,11 @@ void GameClient::net_thread()
        
 
     }
+}
+void GameClient::run(){
+    while(gameIsRunning_){
+        render();
+        input_thread();
+    }
+    
 }

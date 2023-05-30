@@ -50,7 +50,7 @@ public:
     */
     void initClient();
     void render() const;
-    
+    void run();
 
 private:
 

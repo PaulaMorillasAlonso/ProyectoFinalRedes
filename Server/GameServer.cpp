@@ -75,7 +75,7 @@ void GameServer::do_messages()
                         newPlayer.playerInfo=(*it).second;
                         socket.send(newPlayer,*client_socket);
                     }
-                    //++clientIt;
+                   
                 }
             }
        
