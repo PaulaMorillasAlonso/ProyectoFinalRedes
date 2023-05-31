@@ -31,6 +31,6 @@ private:
      */
     Message myState_;
     Socket socket;
-
+    bool exit_=false;
 
 };

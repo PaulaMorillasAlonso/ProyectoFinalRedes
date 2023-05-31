@@ -9,7 +9,7 @@ GameServer::GameServer(const char* s, const char* p) : socket(s, p)
 
 void GameServer::do_messages()
 {
-    while (true)
+    while (!exit_)
     {
         /*
          * NOTA: los clientes están definidos con "smart pointers", es necesario
@@ -134,6 +134,10 @@ void GameServer::do_messages()
                         }
                         ++itPlayers;
                     }
+                    //Se han ido todos los jugadores
+                    if(clients.size()<1){
+                        exit_=true;
+                    }
                  
                     break;
                 }
@@ -149,7 +153,7 @@ void GameServer::do_messages()
                     {
                         socket.send(over, *((*it).second.get()));
                     }
-                    
+
                     break;
                 }
             }
