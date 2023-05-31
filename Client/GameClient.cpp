@@ -69,6 +69,7 @@ void GameClient::input_thread()
                 logout();
             }
             else{
+                
                 SDL_Scancode pressedKey;
                 pressedKey= myPlayer_->handleInput(event);
                 if(pressedKey!=SDL_SCANCODE_UNKNOWN){
@@ -160,20 +161,30 @@ void GameClient::net_thread()
             case Message::MessageType::INPUT:{
 
                 //Si otro jugador se ha movido, actualizo su información
-                
+
                 if (message.nick!= myPlayer_->getNick())
                 {
                     otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
                 }
+                break;
             }
-           
+            case Message::MessageType::WAITING:{
+                std::cout<<"Estoy esperando a otro jugador\n";
+                break;
+            }
+            case Message::MessageType::READY:{
+                std::cout<<"Podemos empezar\n";
+                gameIsRunning_=true;
+                waitingForOther_=false;
+                break;
+            }
         }
        
 
     }
 }
 void GameClient::run(){
-    while(gameIsRunning_){
+    while(gameIsRunning_||waitingForOther_){
         render();
         input_thread();
     }

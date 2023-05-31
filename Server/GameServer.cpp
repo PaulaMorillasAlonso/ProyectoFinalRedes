@@ -3,8 +3,7 @@
 
 GameServer::GameServer(const char* s, const char* p) : socket(s, p)
 {
-       
-        //players=(PlayerInfo*)malloc(sizeof(PlayerInfo)*2);
+        myState_.type=Message::MessageType::WAITING;
         socket.bind();
 };
 
@@ -64,7 +63,6 @@ void GameServer::do_messages()
                     }
             
                     //Avisar de la posicion del contrario
-                
                     for (auto it = players.begin(); it != players.end(); ++it)
                     {   
                         //Si tiene un nick distinto al mio (es otro jugador) mandame su informacion
@@ -75,6 +73,28 @@ void GameServer::do_messages()
                             socket.send(newPlayer,*client_socket);
                         }
                    
+                    }
+                    //Si solo se ha conectado un jugador
+                    if(clients.size() <= 1){
+                        Message waiting;
+                        waiting.type=Message::MessageType::WAITING;
+                        std::cout<<"Esperando otro jugador...\n";
+                        //Avisamos a ese jugador de que espere
+                        socket.send(waiting,*client_socket);
+
+                    }
+                    else{
+                        Message ready;
+                        ready.type=Message::MessageType::READY;
+                        myState_.type=Message::MessageType::READY;
+                        //Avisa a todos de que podemos empezar
+                        for (auto it = clients.begin(); it != clients.end(); it++)
+                        {
+                            socket.send(ready, *((*it).second.get()));
+                        }
+
+                        std::cout<<"Ya hay dos jugadores, empecemos\n";
+
                     }
                     break;
 
@@ -122,7 +142,6 @@ void GameServer::do_messages()
                     }*/
                     break;
                 }
-
             }
         }
 

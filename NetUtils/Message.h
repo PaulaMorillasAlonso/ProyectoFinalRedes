@@ -29,7 +29,6 @@ struct PlayerInfo{
 
     int posX_;
     int posY_;
-    int input_;
 };
 class Message : public Serializable
 {
@@ -41,7 +40,10 @@ public:
         MESSAGE = 1,
         LOGOUT = 2,
         INIPLAYER=3,
-        INPUT=4
+        INPUT=4,
+        WAITING=5,
+        READY=6
+
  
     };
 

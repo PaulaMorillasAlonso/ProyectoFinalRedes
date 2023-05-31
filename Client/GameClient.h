@@ -69,7 +69,8 @@ private:
     //Inforacin de los jugadores, similar a la del servidor
     std::map<std::string, PlayerInfo> playersInfo_;
 
-    bool gameIsRunning_ = true;
+    bool waitingForOther_=true;
+    bool gameIsRunning_ = false;
 
     Player * myPlayer_;
     Player * otherPlayer_;

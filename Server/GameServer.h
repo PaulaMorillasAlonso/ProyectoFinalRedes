@@ -29,7 +29,7 @@ private:
     /**
      * Socket del servidor
      */
-
+    Message myState_;
     Socket socket;
 
 
