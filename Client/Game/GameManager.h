@@ -1,4 +1,4 @@
-/*#ifndef GAMEMANAGER_H
+#ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
 #include <string>
@@ -13,18 +13,13 @@
 #include "../../SDL_Utils/macros.h"
 #include "../../SDL_Utils/Vector2D.h"
 
-class GameManager{
 
+class GameManager {
 	
 public:
 
+	GameManager();
 	virtual ~GameManager();
-
-	// cannot copy/move
-	GameManager(GameManager&) = delete;
-	GameManager(GameManager&&) = delete;
-	GameManager& operator=(GameManager&) = delete;
-	GameManager& operator=(GameManager&&) = delete;
 
 	// the window's width
 	Vector2D getWindowSize();
@@ -33,15 +28,7 @@ public:
 	void setWindowSize(Vector2D limit);
 
 private:
-	GameManager();
 	Vector2D windowSize_;
 	Vector2D relativeSize_;
 };
-#endif*/
-
-// This macro defines a compact way for using the singleton GameManager, instead of
-// writing GameManager::instance()->method() we write GameManager().method()
-//
-/*inline GameManager& GameManager() {
-	return *GameManager::instance();
-}*/
+#endif

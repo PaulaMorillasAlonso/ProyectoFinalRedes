@@ -1,6 +1,9 @@
 #include "../../NetUtils/GameObject.h"
 #include <string>
+
 class GameClient;
+
+
 class Player : public GameObject {
 
 public:
@@ -11,7 +14,9 @@ public:
     std::string getNick(){
         return nick_;
     };
-    /**void handleInput(const SDL_Event &event) override;
+
+    /*
+    void handleInput(const SDL_Event &event) override;
     void update() override;
     void render() override;
 
@@ -23,7 +28,8 @@ public:
 
     void setVelY(float newVel) {
         vel_.setY(newVel);
-    }*/
+    }
+    */
 
 private:
 
