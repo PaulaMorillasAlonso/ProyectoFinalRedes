@@ -12,7 +12,7 @@ public:
 	GameObject(std::string name);
 	virtual ~GameObject();
 
-	virtual void handleInput(const SDL_Event &event) {};
+	virtual SDL_Scancode handleInput(const SDL_Event &event) {};
 	virtual void update() {};
 
 	inline bool isEnabled() const {

@@ -39,6 +39,7 @@ void GameClient::initClient(){
     //Crea un jugador
     myPlayer_= new Player(myNick_);
     myPlayer_->setTexture("Assets/player1.png");
+    myPlayer_->setKeys(SDL_SCANCODE_A,SDL_SCANCODE_D);
     objMan_->addObject(myPlayer_);
 
 
@@ -66,9 +67,34 @@ void GameClient::input_thread()
             if(event.type == SDL_QUIT){
                 gameIsRunning_= false;
                 logout();
+            }
+            else{
+                SDL_Scancode pressedKey;
+                pressedKey= myPlayer_->handleInput(event);
+                if(pressedKey!=SDL_SCANCODE_UNKNOWN){
+                    updateMyInfo();
+                    Message msg;
+                    msg.nick=myNick_;
+                    msg.type=Message::MessageType::INPUT;
+
+                    if(pressedKey==SDL_SCANCODE_A){ //Se mueve a izq
+
+                        msg.playerInfo.input_= Message::LEFT;
+                        std::cout<<"Oye server me he movido hacia la izquierda\n";
+                    }
+                    else if(pressedKey==SDL_SCANCODE_D){ //Se mueve a der
+
+                        msg.playerInfo.input_= Message::RIGHT;
+                        std::cout<<"Oye server me he movido hacia la derecha\n";
+
+                    }
+                    msg.playerInfo=playersInfo_[myNick_];
+                    socket.send(msg, socket);
+                }
+                
 
             }
-
+            
         }
         
         //Message msg(nick, buffer);
@@ -132,6 +158,12 @@ void GameClient::net_thread()
                 else
                 {
                     myPlayer_->setTransform(p.posX_,p.posY_);
+
+                    PlayerInfo myInfo;
+        
+                    myInfo.posX_=myPlayer_->getTransform().getX();
+                    myInfo.posY_=myPlayer_->getTransform().getY();
+                    playersInfo_[myNick_]=myInfo;
                     std::cout<<"Mi posicion X es: "<<std::to_string(p.posX_)<<"\n";
                     std::cout<<"Mi posicion Y es: "<<std::to_string(p.posY_)<<"\n";
 
@@ -151,4 +183,15 @@ void GameClient::run(){
         input_thread();
     }
     
+}
+void GameClient::updateMyInfo(){
+
+    //Actualiza la informacion que le voy a enviar al servidor
+    PlayerInfo myInfo;
+    
+    myInfo.posX_=myPlayer_->getTransform().getX();
+    myInfo.posY_=myPlayer_->getTransform().getY();
+
+    playersInfo_[myNick_].posX_=myInfo.posX_;
+    playersInfo_[myNick_].posY_=myInfo.posY_;
 }

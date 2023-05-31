@@ -1,6 +1,6 @@
 #include "../../NetUtils/GameObject.h"
 #include <string>
-class GameClient;
+//class GameClient;
 class Player : public GameObject {
 
 public:
@@ -11,13 +11,13 @@ public:
     std::string getNick(){
         return nick_;
     };
-    /**void handleInput(const SDL_Event &event) override;
-    void update() override;
-    void render() override;
+    SDL_Scancode handleInput(const SDL_Event &event) override;
+    /*void update() override;
+    void render() override;*/
 
-    void setKeys(SDL_Scancode up,SDL_Scancode left, SDL_Scancode right);
+    void setKeys(SDL_Scancode left, SDL_Scancode right);
 
-    void setVelX(float newVel) {
+    /*void setVelX(float newVel) {
         vel_.setX(newVel);
     }
 
@@ -27,13 +27,11 @@ public:
 
 private:
 
-    GameClient *client_;
-
     Vector2D vel_;
     float gravity_;
     float jumpVel_;
-
+    const float PLAYER_MOVEMENT_=5;
     std::string nick_;
-    //MoodleJumpMessageClient::InputType key;
-	SDL_Scancode left_, right_,up_;
+
+	SDL_Scancode left_, right_;//,up_;
 };

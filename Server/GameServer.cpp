@@ -44,8 +44,6 @@ void GameServer::do_messages()
                 PlayerInfo info;
                 info.posX_ = rand()%(670-50 + 1) + 50;
                 info.posY_= rand()%(430-50 + 1) + 50;
-                info.w_=50;
-                info.h_=50;
                 players[msg.nick]=info;
 
                 Message newPlayer;
@@ -55,6 +53,7 @@ void GameServer::do_messages()
 
                 //Vamos a enviar un mensaje al cliente con su informacion de inicio
                 socket.send(newPlayer, *client_socket);
+
                 auto itPlayers=players.begin();
                 for (auto it = clients.begin(); it != clients.end(); it++)
                 {

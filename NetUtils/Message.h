@@ -26,11 +26,10 @@
  *
  */
 struct PlayerInfo{
-    int id_;
+
     int posX_;
     int posY_;
-    int w_;
-    int h_;
+    int input_;
 };
 class Message : public Serializable
 {
@@ -41,10 +40,17 @@ public:
         LOGIN = 0,
         MESSAGE = 1,
         LOGOUT = 2,
-        INIPLAYER=3
+        INIPLAYER=3,
+        INPUT=4
  
     };
 
+    enum InputType
+    {
+        NONE= 0,
+        LEFT= 1,
+        RIGHT= 2
+    };
     Message() {};
 
     Message(const std::string& n, const std::string& m) :nick(n), message(m) {};

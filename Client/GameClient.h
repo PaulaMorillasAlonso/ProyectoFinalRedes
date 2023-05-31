@@ -51,7 +51,7 @@ public:
     void initClient();
     void render() const;
     void run();
-
+    void updateMyInfo();
 private:
 
     SDLGame* game_;
