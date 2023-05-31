@@ -32,7 +32,7 @@ void GameServer::do_messages()
             std::cout << "Error al recibir el mensaje\n";
         }
 
-        if (msg.type == Message::LOGIN) {  // - LOGIN: Añadir al vector clients
+        else if (msg.type == Message::LOGIN) {  // - LOGIN: Añadir al vector clients
 
             std::cout << msg.nick << " LOGIN\n";
             if (client_socket != nullptr) {

@@ -1,4 +1,3 @@
-/*
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
@@ -9,8 +8,9 @@
 
 #include "../../SDL_Utils/RandomNumberGenerator.h"
 #include "../../SDL_Utils/macros.h"
-#include "../../SDL_Utils/GameObject.h"
+#include "../../NetUtils/GameObject.h"
 #include "../../SDL_Utils/Vector2D.h"
+#include "Platform.h"
 
 
 class PlatformManager {
@@ -37,4 +37,3 @@ private:
     int rightMostPos_;
 };
 #endif
-*/

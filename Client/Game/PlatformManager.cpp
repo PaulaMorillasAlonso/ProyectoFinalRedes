@@ -1,4 +1,3 @@
-/*
 #include "PlatformManager.h"
 
 #include <cassert>
@@ -24,7 +23,7 @@ Platform* PlatformManager::createPlatform() {
     // Get random between minPlatformDistance & max
     // Add random to platforms_.front()'s height
     // This makes y
-    y = rand() % maxPlatformDistance_ + minPlatformDistance_ + platforms_.front().getTransform().getY();
+    y = rand() % maxPlatformDistance_ + minPlatformDistance_ + platforms_.front()->getTransform().getY();
 
     p->setTransform(Vector2D(x, y));
 
@@ -33,10 +32,9 @@ Platform* PlatformManager::createPlatform() {
 
 // Call this from Manager to remove from list only, not delete.
 void PlatformManager::removePlatform(Platform* platform) {
-    platforms_.erase(platform);
+    platforms_.remove(platform);
 }
 
 std::list<Platform*> PlatformManager::getPlatforms() {
     return platforms_;
 }
-*/

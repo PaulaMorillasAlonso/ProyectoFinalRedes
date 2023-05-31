@@ -1,3 +1,4 @@
+#pragma once
 #include <cassert>
 
 #include <SDL2/SDL.h>
@@ -5,7 +6,10 @@
 #include "../SDL_Utils/Vector2D.h"
 #include <string>
 #include "SDLGame.h"
+
+
 class GameObject {
+
 public:
 	static int numObjects;
 	GameObject();
@@ -42,7 +46,7 @@ public:
 	std::string getName();
 
 protected:
-	std::string name_="";
+	std::string name_ = "";
 	Vector2D tr_;
 	Vector2D dim_;
 

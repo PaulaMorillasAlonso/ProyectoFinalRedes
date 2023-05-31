@@ -23,7 +23,8 @@ public:
 
     void setVelY(float newVel) {
         vel_.setY(newVel);
-    }*/
+    }
+    */
 
 private:
 
