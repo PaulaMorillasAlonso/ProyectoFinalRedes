@@ -109,15 +109,11 @@ void GameClient::render() const{
 
 
         //Pintado de fondo
-        if(waitingForOther_){
-            SDL_RenderCopy(game_->getRenderer(),game_->getWaitingTexture(),NULL,NULL);
-        }
-        else{
 
-            SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
+        SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
 
-            //Pintado de los GameObjects y jugadores
-            for (const auto& pair : objMan_->getObjects()) {
+        //Pintado de los GameObjects y jugadores
+        for (const auto& pair : objMan_->getObjects()) {
       
                 GameObject * obj = pair.second;
                 SDL_Rect location = {obj->getTransform().getX(),obj->getTransform().getY(),
@@ -125,10 +121,7 @@ void GameClient::render() const{
      
                 SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
        
-            }
         }
-
-
         // Renderiza lo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());
         SDL_UpdateWindowSurface(game_->getWindow());
@@ -222,11 +215,11 @@ void GameClient::updateMyInfo(){
     playersInfo_[myNick_].posX_=myInfo.posX_;
     playersInfo_[myNick_].posY_=myInfo.posY_;
 
-    /*Prueba para comprobar si funcionaba el cambio a gameover
+    //Prueba para comprobar si funcionaba el cambio a gameover---------------------CAMBIAR GAMEOVER
     if(myInfo.posX_<-10){
         std::cout<<"He perdido\n";
         Message final;
         final.type=Message::MessageType::GAMEOVER;
         socket.send(final,socket);
-    }*/
+    }
 }
