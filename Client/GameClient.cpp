@@ -79,12 +79,12 @@ void GameClient::input_thread()
 
                     if(pressedKey==SDL_SCANCODE_A){ //Se mueve a izq
 
-                        msg.playerInfo.input_= Message::LEFT;
+                        playersInfo_[myNick_].input_= Message::LEFT;
                         std::cout<<"Oye server me he movido hacia la izquierda\n";
                     }
                     else if(pressedKey==SDL_SCANCODE_D){ //Se mueve a der
 
-                        msg.playerInfo.input_= Message::RIGHT;
+                        playersInfo_[myNick_].input_= Message::RIGHT;
                         std::cout<<"Oye server me he movido hacia la derecha\n";
 
                     }

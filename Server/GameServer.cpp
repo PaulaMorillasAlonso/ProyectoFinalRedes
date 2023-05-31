@@ -31,73 +31,88 @@ void GameServer::do_messages()
         {
             std::cout << "Error al recibir el mensaje\n";
         }
+        else {
 
-        else if (msg.type == Message::LOGIN) {  // - LOGIN: Añadir al vector clients
-
-            std::cout << msg.nick << " LOGIN\n";
-            if (client_socket != nullptr) {
-
-
-                std::unique_ptr<Socket> new_client(client_socket);
+            switch(msg.type){
+                case Message::LOGIN:{
+                    
+                    std::cout << msg.nick << " LOGIN\n";
                 
-                clients[msg.nick]=std::move(new_client);
-                PlayerInfo info;
-                info.posX_ = rand()%(670-50 + 1) + 50;
-                info.posY_= rand()%(430-50 + 1) + 50;
-                players[msg.nick]=info;
-
-                Message newPlayer;
-                newPlayer.type= Message::MessageType::INIPLAYER;
-                newPlayer.nick=msg.nick;
-                newPlayer.playerInfo=players[msg.nick];
-
-                //Vamos a enviar un mensaje al cliente con su informacion de inicio
-                socket.send(newPlayer, *client_socket);
-
-                auto itPlayers=players.begin();
-                for (auto it = clients.begin(); it != clients.end(); it++)
-                {
-                    if((*itPlayers).first!=newPlayer.nick){
-                        socket.send(newPlayer, *((*it).second.get()));
-                    }
-                    ++itPlayers;
-                }
-            
-                //Avisar de la posicion del contrario
+                    std::unique_ptr<Socket> new_client(client_socket);
                 
-                for (auto it = players.begin(); it != players.end(); ++it)
-                {   
-                    //Si tiene un nick distinto al mio (es otro jugador) mandame su informacion
-                    if ((*it).first != newPlayer.nick)
+                    clients[msg.nick]=std::move(new_client);
+                    PlayerInfo info;
+                    info.posX_ = rand()%(670-50 + 1) + 50;
+                    info.posY_= rand()%(430-50 + 1) + 50;
+                    players[msg.nick]=info;
+
+                    Message newPlayer;
+                    newPlayer.type= Message::MessageType::INIPLAYER;
+                    newPlayer.nick=msg.nick;
+                    newPlayer.playerInfo=players[msg.nick];
+
+                    //Vamos a enviar un mensaje al cliente con su informacion de inicio
+                    socket.send(newPlayer, *client_socket);
+
+                    auto itPlayers=players.begin();
+                    for (auto it = clients.begin(); it != clients.end(); it++)
                     {
-                        newPlayer.nick=(*it).first;
-                        newPlayer.playerInfo=(*it).second;
-                        socket.send(newPlayer,*client_socket);
+                        if((*itPlayers).first!=newPlayer.nick){
+                        socket.send(newPlayer, *((*it).second.get()));
+                        }
+                        ++itPlayers;
                     }
-                   
-                }
-            }
-       
             
-        }
-        else if (msg.type == Message::LOGOUT) { // - LOGOUT: Eliminar del vector clients
-            std::cout << msg.nick << " LOGOUT\n";
+                    //Avisar de la posicion del contrario
+                
+                    for (auto it = players.begin(); it != players.end(); ++it)
+                    {   
+                        //Si tiene un nick distinto al mio (es otro jugador) mandame su informacion
+                        if ((*it).first != newPlayer.nick)
+                        {
+                            newPlayer.nick=(*it).first;
+                            newPlayer.playerInfo=(*it).second;
+                            socket.send(newPlayer,*client_socket);
+                        }
+                   
+                    }
+                    break;
 
-            /*for (int i = 0; i < clients.size(); ++i) {
-                if ((*clients[i]) == (*client_socket)) {
-                    clients.erase(clients.begin() + i);
+                
                 }
-            }*/
-        }
-        else if (msg.type == Message::MESSAGE){ // - MESSAGE: Reenviar el mensaje a todos los clientes (menos el emisor)
-
-            std::cout << msg.nick << " MESSAGE\n";
-
-            /*for (int i = 0; i < clients.size(); ++i) {
-                if (!((*clients[i]) == (*client_socket))) {
-                    socket.send(msg, *clients[i]);
+                case Message::INPUT:
+                {
+                    if(msg.playerInfo.input_==Message::LEFT){
+                        std::cout<<"Te has movido a la izquierda\n";
+                        
+                    }
+                    else if(msg.playerInfo.input_==Message::RIGHT){
+                        std::cout<<"Te has movido a la derecha\n";
+                    }
+                    break;
                 }
-            }*/
+                case Message::LOGOUT:{
+                    std::cout << msg.nick << " LOGOUT\n";
+
+                    /*for (int i = 0; i < clients.size(); ++i) {
+                        if ((*clients[i]) == (*client_socket)) {
+                        clients.erase(clients.begin() + i);
+                    }
+                     }*/
+                    break;
+                }
+                case Message::MESSAGE:{
+                    std::cout << msg.nick << " MESSAGE\n";
+
+                    /*for (int i = 0; i < clients.size(); ++i) {
+                    if (!((*clients[i]) == (*client_socket))) {
+                        socket.send(msg, *clients[i]);
+                    }
+                    }*/
+                    break;
+                }
+
+            }
         }
 
     }
