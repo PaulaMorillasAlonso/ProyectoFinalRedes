@@ -85,16 +85,15 @@ void GameServer::do_messages()
                     }
                     else{
                         Message ready;
-                        ready.type=Message::MessageType::READY;
-                        myState_.type=Message::MessageType::READY;
+                        ready.type=Message::MessageType::PLAYING;
+                        myState_.type=Message::MessageType::PLAYING;
                         //Avisa a todos de que podemos empezar
+                        std::cout<<"Ya hay dos jugadores, empecemos!\n";
+
                         for (auto it = clients.begin(); it != clients.end(); it++)
                         {
                             socket.send(ready, *((*it).second.get()));
                         }
-
-                        std::cout<<"Ya hay dos jugadores, empecemos\n";
-
                     }
                     break;
 
@@ -125,21 +124,32 @@ void GameServer::do_messages()
                 case Message::LOGOUT:{
                     std::cout << msg.nick << " LOGOUT\n";
 
-                    /*for (int i = 0; i < clients.size(); ++i) {
-                        if ((*clients[i]) == (*client_socket)) {
-                        clients.erase(clients.begin() + i);
+                    auto itPlayers=players.begin();
+                    for (auto it = clients.begin(); it != clients.end(); it++)
+                    {
+                        if((*itPlayers).first==msg.nick){
+                            clients.erase(it);
+                            players.erase(itPlayers);
+                            break;
+                        }
+                        ++itPlayers;
                     }
-                     }*/
+                 
                     break;
                 }
-                case Message::MESSAGE:{
-                    std::cout << msg.nick << " MESSAGE\n";
+                case Message::GAMEOVER:{
+                  
+                    Message over;
+                    over.type=Message::MessageType::GAMEOVER;
+                    myState_.type=Message::MessageType::GAMEOVER;
+                    //Avisa a todos de que ha acabado el juego
+                    std::cout<<"Fin de la partida\n";
 
-                    /*for (int i = 0; i < clients.size(); ++i) {
-                    if (!((*clients[i]) == (*client_socket))) {
-                        socket.send(msg, *clients[i]);
+                    for (auto it = clients.begin(); it != clients.end(); it++)
+                    {
+                        socket.send(over, *((*it).second.get()));
                     }
-                    }*/
+                    
                     break;
                 }
             }

@@ -52,9 +52,9 @@ public:
     void render() const;
     void run();
     void updateMyInfo();
+    void update();
 private:
 
-    SDLGame* game_;
     /**
      * Socket para comunicar con el servidor
      */
@@ -71,9 +71,12 @@ private:
 
     bool waitingForOther_=true;
     bool gameIsRunning_ = false;
-
+    bool canExit_=false;
+    float timeUntilLogout_=5.0f;
+    float logoutDelay_=0;
     Player * myPlayer_;
     Player * otherPlayer_;
     std::string myNick_;
     ObjectManager * objMan_;
+    SDLGame* game_;
 };

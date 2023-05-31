@@ -17,7 +17,8 @@ private:
 
 	static SDLGame* instance;
 	SDL_Texture* ourBG_;
-	SDL_Texture* otherPlayer_;
+	SDL_Texture* waitingBG_;
+
 
 public:
   
@@ -34,7 +35,7 @@ public:
 	SDL_Surface* getSurface();
 
 	SDL_Texture * getBGTexture();
-	SDL_Texture * getOtherPlayerTexture();
+	SDL_Texture * getWaitingTexture();
 	void destroyWindow();
 
     ///<summary>Constantes con las dimensiones de la ventana </summary>

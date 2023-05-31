@@ -37,12 +37,12 @@ public:
     enum MessageType
     {
         LOGIN = 0,
-        MESSAGE = 1,
-        LOGOUT = 2,
-        INIPLAYER=3,
-        INPUT=4,
-        WAITING=5,
-        READY=6
+        LOGOUT = 1,
+        INIPLAYER=2,
+        INPUT=3,
+        WAITING=4,
+        PLAYING=5,
+        GAMEOVER=6
 
  
     };

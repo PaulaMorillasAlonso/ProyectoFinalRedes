@@ -54,6 +54,14 @@ void GameClient::logout()
 
     socket.send(em, socket);
 
+    //Borramos la ventana
+    game_->destroyWindow();
+
+    //Liberamos la memoria
+    delete myPlayer_;
+    delete otherPlayer_;
+    delete objMan_;
+    delete game_;
 }
 
 void GameClient::input_thread()
@@ -64,62 +72,71 @@ void GameClient::input_thread()
         // Start our event loop
         while(SDL_PollEvent(&event)){
             // Handle each specific event
-            if(event.type == SDL_QUIT){
-                gameIsRunning_= false;
-                logout();
+            if(canExit_)
+            {
+                //Si el jugador sale por si mismo o si han pasado 5 segundos hace logout
+                float currTime=SDL_GetTicks()/1000.f;
+                if(event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE || currTime-logoutDelay_ > 5 ){ 
+                    gameIsRunning_= false;
+                    logout();
+                    break;
+                }
             }
             else{
                 
                 SDL_Scancode pressedKey;
-                pressedKey= myPlayer_->handleInput(event);
-                if(pressedKey!=SDL_SCANCODE_UNKNOWN){
+                if(!waitingForOther_){
+                    pressedKey= myPlayer_->handleInput(event);
+                    if(pressedKey!=SDL_SCANCODE_UNKNOWN){
 
-                    //Actualiza la informacion que el cliente tiene sobre su jugador
-                    updateMyInfo();
-                    //Envia esta informacion al servidor, que podra avisar al resto de jugadores
-                    Message msg;
-                    msg.nick=myNick_;
-                    msg.type=Message::MessageType::INPUT;
-                    msg.playerInfo=playersInfo_[myNick_];
-                    socket.send(msg, socket);
+                        //Actualiza la informacion que el cliente tiene sobre su jugador
+                        updateMyInfo();
+                        //Envia esta informacion al servidor, que podra avisar al resto de jugadores
+                        Message msg;
+                        msg.nick=myNick_;
+                        msg.type=Message::MessageType::INPUT;
+                        msg.playerInfo=playersInfo_[myNick_];
+                        socket.send(msg, socket);
+                    }
                 }
                 
-
             }
             
         }
-        
-        //Message msg(nick, buffer);
-        //msg.type = Message::MESSAGE;
-        //socket.send(msg, socket);
         
 }
 void GameClient::render() const{
 
 
         //Pintado de fondo
-        SDL_SetRenderDrawColor(game_->getRenderer(),0,0,0xFF,SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(game_->getRenderer());
+        if(waitingForOther_){
+            SDL_RenderCopy(game_->getRenderer(),game_->getWaitingTexture(),NULL,NULL);
+        }
+        else{
 
-        SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
+            SDL_RenderCopy(game_->getRenderer(),game_->getBGTexture(),NULL,NULL);
 
-        
-        //Pintado de los GameObjects y jugadores
-        for (const auto& pair : objMan_->getObjects()) {
+            //Pintado de los GameObjects y jugadores
+            for (const auto& pair : objMan_->getObjects()) {
       
-            GameObject * obj = pair.second;
-            SDL_Rect location = {obj->getTransform().getX(),obj->getTransform().getY(),
+                GameObject * obj = pair.second;
+                SDL_Rect location = {obj->getTransform().getX(),obj->getTransform().getY(),
                                 obj->getDimensions().getX(),obj->getDimensions().getY()}; 
      
-            SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
+                SDL_RenderCopy(game_->getRenderer(),obj->getTexture(),NULL,&location);
        
+            }
         }
+
 
         // Renderiza lo que hemos dibujado
         SDL_RenderPresent(game_->getRenderer());
         SDL_UpdateWindowSurface(game_->getWindow());
    
     
+}
+void GameClient::update(){
+
 }
 void GameClient::net_thread()
 {
@@ -149,7 +166,6 @@ void GameClient::net_thread()
                     myPlayer_->setTransform(p.posX_,p.posY_);
 
                     PlayerInfo myInfo;
-        
                     myInfo.posX_=myPlayer_->getTransform().getX();
                     myInfo.posY_=myPlayer_->getTransform().getY();
                     playersInfo_[myNick_]=myInfo;
@@ -169,18 +185,23 @@ void GameClient::net_thread()
                 break;
             }
             case Message::MessageType::WAITING:{
-                std::cout<<"Estoy esperando a otro jugador\n";
+
                 break;
             }
-            case Message::MessageType::READY:{
-                std::cout<<"Podemos empezar\n";
+            case Message::MessageType::PLAYING:{
+
                 gameIsRunning_=true;
                 waitingForOther_=false;
                 break;
             }
+            case Message::MessageType::GAMEOVER:{
+                //Asi evitamos que salga durante la partida
+                canExit_=true;
+                logoutDelay_=SDL_GetTicks()/1000.f;
+                break;
+            }
         }
        
-
     }
 }
 void GameClient::run(){
@@ -200,4 +221,12 @@ void GameClient::updateMyInfo(){
 
     playersInfo_[myNick_].posX_=myInfo.posX_;
     playersInfo_[myNick_].posY_=myInfo.posY_;
+
+    /*Prueba para comprobar si funcionaba el cambio a gameover
+    if(myInfo.posX_<-10){
+        std::cout<<"He perdido\n";
+        Message final;
+        final.type=Message::MessageType::GAMEOVER;
+        socket.send(final,socket);
+    }*/
 }

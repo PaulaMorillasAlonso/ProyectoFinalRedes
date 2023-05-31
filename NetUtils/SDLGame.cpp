@@ -32,7 +32,7 @@ void SDLGame::initSDL(){
     if((initStatus & flags) != flags){
         std::cout << "SDL2_Image format not available" << std::endl;
     }
-    ourBG_=loadImage("mario.png");
+    ourBG_=loadImage("background.png");
 
 }
 SDL_Texture * SDLGame::loadImage(std::string name){
@@ -74,9 +74,9 @@ SDL_Surface*SDLGame::getSurface(){
 SDL_Texture *SDLGame::getBGTexture(){
     return ourBG_;
 }
-SDL_Texture *SDLGame::getOtherPlayerTexture(){
-    otherPlayer_=loadImage("player2.png");
-    return otherPlayer_;
+SDL_Texture *SDLGame::getWaitingTexture(){
+    waitingBG_=loadImage("waiting.png");
+    return waitingBG_;
 }
 
 void SDLGame::destroyWindow(){
@@ -96,6 +96,7 @@ void SDLGame::destroyWindow(){
 	window_ = nullptr;
     surface_=nullptr;
     ourBG_=nullptr;
+    waitingBG_=nullptr;
 
 	//Cerramos SDL
 	SDL_Quit();
