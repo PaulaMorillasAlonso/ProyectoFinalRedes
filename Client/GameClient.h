@@ -72,6 +72,7 @@ private:
     bool gameIsRunning_ = true;
 
     Player * myPlayer_;
+    Player * otherPlayer_;
     std::string myNick_;
     ObjectManager * objMan_;
 };

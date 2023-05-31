@@ -72,22 +72,13 @@ void GameClient::input_thread()
                 SDL_Scancode pressedKey;
                 pressedKey= myPlayer_->handleInput(event);
                 if(pressedKey!=SDL_SCANCODE_UNKNOWN){
+
+                    //Actualiza la informacion que el cliente tiene sobre su jugador
                     updateMyInfo();
+                    //Envia esta informacion al servidor, que podra avisar al resto de jugadores
                     Message msg;
                     msg.nick=myNick_;
                     msg.type=Message::MessageType::INPUT;
-
-                    if(pressedKey==SDL_SCANCODE_A){ //Se mueve a izq
-
-                        playersInfo_[myNick_].input_= Message::LEFT;
-                        std::cout<<"Oye server me he movido hacia la izquierda\n";
-                    }
-                    else if(pressedKey==SDL_SCANCODE_D){ //Se mueve a der
-
-                        playersInfo_[myNick_].input_= Message::RIGHT;
-                        std::cout<<"Oye server me he movido hacia la derecha\n";
-
-                    }
                     msg.playerInfo=playersInfo_[myNick_];
                     socket.send(msg, socket);
                 }
@@ -147,13 +138,10 @@ void GameClient::net_thread()
                 if (message.nick!= myPlayer_->getNick())
                 {
                     playersInfo_[message.nick] = p;
-                    Player *player= new Player(message.nick);
-                    player->setTexture("Assets/player2.png");
-                    player->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
-                    objMan_->addObject(player);
-
-                    std::cout<<"La otra posicion X es: "<<std::to_string(p.posX_)<<"\n";
-                    std::cout<<"La otra posicion Y es: "<<std::to_string(p.posY_)<<"\n";
+                    otherPlayer_= new Player(message.nick);
+                    otherPlayer_->setTexture("Assets/player2.png");
+                    otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                    objMan_->addObject(otherPlayer_);
                 }
                 else
                 {
@@ -164,12 +152,19 @@ void GameClient::net_thread()
                     myInfo.posX_=myPlayer_->getTransform().getX();
                     myInfo.posY_=myPlayer_->getTransform().getY();
                     playersInfo_[myNick_]=myInfo;
-                    std::cout<<"Mi posicion X es: "<<std::to_string(p.posX_)<<"\n";
-                    std::cout<<"Mi posicion Y es: "<<std::to_string(p.posY_)<<"\n";
 
                 }
 
                 break;
+            }
+            case Message::MessageType::INPUT:{
+
+                //Si otro jugador se ha movido, actualizo su información
+                
+                if (message.nick!= myPlayer_->getNick())
+                {
+                    otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                }
             }
            
         }

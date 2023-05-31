@@ -82,13 +82,24 @@ void GameServer::do_messages()
                 }
                 case Message::INPUT:
                 {
-                    if(msg.playerInfo.input_==Message::LEFT){
-                        std::cout<<"Te has movido a la izquierda\n";
-                        
+                    //Mensaje para avisar al otro cliente de los cambios de posicion
+                    Message playerMoved;
+                    playerMoved.nick=msg.nick;
+                    players[msg.nick]=msg.playerInfo;
+                    playerMoved.playerInfo=players[playerMoved.nick];
+                    playerMoved.type=Message::MessageType::INPUT;
+
+                    //Actualizamos la informacion correspondiente al cliente que se ha movido (ya que ha cambiado su posicion)
+                    //Avisamos al resto de jugadores de este cambio en la posicion del contrario
+                    auto itPlayers=players.begin();
+                    for (auto it = clients.begin(); it != clients.end(); it++)
+                    {
+                        if((*itPlayers).first!=msg.nick){
+                        socket.send(playerMoved, *((*it).second.get()));
+                        }
+                        ++itPlayers;
                     }
-                    else if(msg.playerInfo.input_==Message::RIGHT){
-                        std::cout<<"Te has movido a la derecha\n";
-                    }
+
                     break;
                 }
                 case Message::LOGOUT:{

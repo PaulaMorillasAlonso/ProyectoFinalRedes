@@ -45,12 +45,6 @@ public:
  
     };
 
-    enum InputType
-    {
-        NONE= 0,
-        LEFT= 1,
-        RIGHT= 2
-    };
     Message() {};
 
     Message(const std::string& n, const std::string& m) :nick(n), message(m) {};
