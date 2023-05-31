@@ -42,7 +42,8 @@ public:
         INPUT=3,
         WAITING=4,
         PLAYING=5,
-        GAMEOVER=6
+        GAMEOVER=6,
+        WRONG_NAME=7
 
  
     };

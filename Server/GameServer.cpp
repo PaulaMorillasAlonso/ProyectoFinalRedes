@@ -35,8 +35,20 @@ void GameServer::do_messages()
             switch(msg.type){
                 case Message::LOGIN:{
                     
+                    if(firstName_==""){
+                        firstName_=msg.nick;
+                    }
+                    else{
+                        if(msg.nick==firstName_){
+                            std::cout<<"Ese nick ya está en uso, inténtelo de nuevo"<<std::endl;
+                           
+                            Message retry;
+                            retry.type=Message::MessageType::WRONG_NAME;
+                            socket.send(retry,*client_socket);
+                            break;
+                        }
+                    }
                     std::cout << msg.nick << " LOGIN\n";
-                
                     std::unique_ptr<Socket> new_client(client_socket);
                 
                     clients[msg.nick]=std::move(new_client);
@@ -123,7 +135,6 @@ void GameServer::do_messages()
                 }
                 case Message::LOGOUT:{
                     std::cout << msg.nick << " LOGOUT\n";
-
                     auto itPlayers=players.begin();
                     for (auto it = clients.begin(); it != clients.end(); it++)
                     {

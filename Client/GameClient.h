@@ -53,6 +53,7 @@ public:
     void run();
     void updateMyInfo();
     void update();
+
 private:
 
     /**
@@ -72,6 +73,7 @@ private:
     bool waitingForOther_=true;
     bool gameIsRunning_ = false;
     bool canExit_=false;
+    bool mustExit_=false;
     float timeUntilLogout_=5.0f;
     float logoutDelay_=0;
     Player * myPlayer_;

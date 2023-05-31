@@ -31,6 +31,7 @@ private:
      */
     Message myState_;
     Socket socket;
+    std::string firstName_="";
     bool exit_=false;
 
 };

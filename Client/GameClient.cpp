@@ -141,7 +141,11 @@ void GameClient::net_thread()
         
         switch (message.type)
         {
-            
+            case Message::MessageType::WRONG_NAME:{
+                //Mensaje que solo se manda en caso de que un segundo jugador tenga el mismo nombre que el primero
+                mustExit_=true;
+                break;
+            }
             case Message::MessageType::INIPLAYER:
             {
                 PlayerInfo p = message.playerInfo;
@@ -177,10 +181,10 @@ void GameClient::net_thread()
                 }
                 break;
             }
-            case Message::MessageType::WAITING:{
+            /*case Message::MessageType::WAITING:{
 
                 break;
-            }
+            }*/
             case Message::MessageType::PLAYING:{
 
                 gameIsRunning_=true;
@@ -198,7 +202,7 @@ void GameClient::net_thread()
     }
 }
 void GameClient::run(){
-    while(gameIsRunning_||waitingForOther_){
+    while((gameIsRunning_||waitingForOther_) && !mustExit_){
         render();
         input_thread();
     }
@@ -215,7 +219,7 @@ void GameClient::updateMyInfo(){
     playersInfo_[myNick_].posX_=myInfo.posX_;
     playersInfo_[myNick_].posY_=myInfo.posY_;
 
-    //Prueba para comprobar si funcionaba el cambio a gameover---------------------CAMBIAR GAMEOVER
+    //Prueba para comprobar si funcionaba el cambio a gameover ------------------------------------------------------- CAMBIAR GAMEOVER
     if(myInfo.posX_<-10){
         std::cout<<"He perdido\n";
         Message final;
