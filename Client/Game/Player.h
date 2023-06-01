@@ -16,30 +16,7 @@ public:
     };
     SDL_Scancode handleInput(const SDL_Event &event) override;
 
-    void update() override {
-        velY_ += gravity_;
-
-        /*
-        if (tr_.getX() > GameManager::instance()->getWindowSize().getX())
-            tr_.setX(0);
-        else if (tr_.getX() < 0)
-            tr_.setX(GameManager::instance()->getWindowSize().getX());
-        */
-
-        tr_.setY(tr_.getY() + velY_);
-
-        // std::cout << "Pos: (" << tr_.getX() << ", " << tr_.getY() << ") VelY: " << velY_ << "\n";
-    }
-
-
-    // void render() override;
-
     void setKeys(SDL_Scancode left, SDL_Scancode right);
-
-    /*void setVelX(float newVel) {
-        vel_.setX(newVel);
-    }
-    */
 
     void setVelY(float newVel) {
         velY_ = newVel;

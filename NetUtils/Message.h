@@ -29,6 +29,8 @@ struct PlayerInfo{
 
     int posX_;
     int posY_;
+    int input_;
+    float velY_;
 };
 class Message : public Serializable
 {
@@ -43,9 +45,16 @@ public:
         WAITING=4,
         PLAYING=5,
         GAMEOVER=6,
-        WRONG_NAME=7
+        WRONG_NAME=7,
+        PLAYERINFO=8
 
  
+    };
+
+    enum InputType{
+        NONE=0,
+        LEFT=1,
+        RIGHT=2
     };
 
     Message() {};

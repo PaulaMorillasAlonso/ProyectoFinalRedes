@@ -13,12 +13,10 @@ SDL_Scancode Player::handleInput(const SDL_Event &e) {
 
 		if (e.key.keysym.scancode == left_){
 
-			setTransform(getTransform().getX()-PLAYER_MOVEMENT_,getTransform().getY());
 			return left_;
 		}
 		else if (e.key.keysym.scancode == right_){
 
-			setTransform(getTransform().getX()+PLAYER_MOVEMENT_,getTransform().getY());
 			return right_;
 		}
 	}

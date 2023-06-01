@@ -151,17 +151,27 @@ void GameClient::input_thread()
                 if(!waitingForOther_){
                     pressedKey= myPlayer_->handleInput(event);
                     if(pressedKey!=SDL_SCANCODE_UNKNOWN){
-
                         //Actualiza la informacion que el cliente tiene sobre su jugador
-                        updateMyInfo();
+                        //updateMyInfo();
                         //Envia esta informacion al servidor, que podra avisar al resto de jugadores
                         Message msg;
                         msg.nick=myNick_;
                         msg.type=Message::MessageType::INPUT;
+
+                        if(pressedKey==SDL_SCANCODE_A){ //Movimiento izquierda
+                           
+                            playersInfo_[myNick_].input_=Message::InputType::LEFT;
+                        }
+                        else if (pressedKey==SDL_SCANCODE_D){
+                         
+
+                            playersInfo_[myNick_].input_=Message::InputType::RIGHT;
+                        }
                         msg.message="move";
                         msg.playerInfo=playersInfo_[myNick_];
                         socket.send(msg, socket);
                     }
+                
                 }
                 
             }
@@ -241,7 +251,7 @@ void GameClient::net_thread()
             case Message::MessageType::INIPLAYER:
             {
                 PlayerInfo p = message.playerInfo;
-
+              
                 if (message.nick!= myPlayer_->getNick())
                 {
                     playersInfo_[message.nick] = p;
@@ -314,13 +324,25 @@ void GameClient::net_thread()
                 logoutDelay_=SDL_GetTicks()/1000.f;
                 break;
             }
+            case Message::MessageType::PLAYERINFO:{
+
+                if (message.nick!= myPlayer_->getNick())
+                    {
+                        otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                    }
+                    else {
+                        myPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                    }
+                    std::cout <<"Mi nick: "<<message.nick<<"Mi vel es: "<<message.playerInfo.velY_<<"Mi pos Y es :"<<message.playerInfo.posY_<<"\n";
+                break;
+            }
         }
        
     }
 }
 void GameClient::run(){
     while((gameIsRunning_||waitingForOther_) && !mustExit_){
-        if(!waitingForOther_) update();
+        //if(!waitingForOther_) //update();
         render();
         input_thread();
     }

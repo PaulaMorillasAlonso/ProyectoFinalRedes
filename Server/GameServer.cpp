@@ -6,6 +6,36 @@ GameServer::GameServer(const char* s, const char* p) : socket(s, p)
         myState_.type=Message::MessageType::WAITING;
         socket.bind();
 };
+void GameServer::update(){
+
+        while(!exit_){
+
+        if(myState_.type==Message::MessageType::PLAYING){
+            Message update;
+            update.type=Message::MessageType::PLAYERINFO;
+
+            //auto itPlayers=players.begin();
+            for (auto it = clients.begin(); it != clients.end(); it++)
+            {
+                for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
+                {
+                    update.nick=(*itPlayers).first;
+                    players[(*itPlayers).first].velY_+=gravity_;
+                    players[(*itPlayers).first].posY_+=players[(*itPlayers).first].velY_;
+                    update.playerInfo=players[(*itPlayers).first];
+
+                    socket.send(update, *((*it).second.get()));
+            
+                }
+                
+            }
+           
+            
+        }
+}
+        
+        
+}
 
 void GameServer::do_messages()
 {
@@ -55,6 +85,7 @@ void GameServer::do_messages()
                     PlayerInfo info;
                     info.posX_ = rand()%(670-50 + 1) + 50;
                     info.posY_= rand()%(430-50 + 1) + 50;
+                    info.velY_=0;
                     players[msg.nick]=info;
 
                     Message newPlayer;
@@ -114,21 +145,32 @@ void GameServer::do_messages()
                 case Message::INPUT:
                 {
                     //Mensaje para avisar al otro cliente de los cambios de posicion
-                    Message playerMoved;
+                    /*Message playerMoved;
                     playerMoved.nick=msg.nick;
-                    playerMoved.message = msg.message;
-                    players[msg.nick]=msg.playerInfo;
-                    playerMoved.playerInfo=players[playerMoved.nick];
-                    playerMoved.type=Message::MessageType::INPUT;
+                    playerMoved.message = msg.message;*/
+               
+                    if(msg.playerInfo.input_==Message::InputType::LEFT){
+                     
+                        players[msg.nick].posX_-=PLAYER_MOVEMENT_;
+
+                    }
+                    else if(msg.playerInfo.input_==Message::InputType::RIGHT){
+
+                        players[msg.nick].posX_+=PLAYER_MOVEMENT_;
+                    }
+
+                    //playerMoved.playerInfo=players[playerMoved.nick];
+
+                   //playerMoved.type=Message::MessageType::PLAYERINFO;
 
                     //Actualizamos la informacion correspondiente al cliente que se ha movido (ya que ha cambiado su posicion)
                     //Avisamos al resto de jugadores de este cambio en la posicion del contrario
-                    auto itPlayers=players.begin();
+                    /*auto itPlayers=players.begin();
                     for (auto it = clients.begin(); it != clients.end(); it++)
                     {
                         socket.send(playerMoved, *((*it).second.get()));
                         ++itPlayers;
-                    }
+                    }*/
 
                     break;
                 }
