@@ -7,6 +7,9 @@ class Platform : public GameObject {
 public:
     Platform();
     virtual ~Platform();
+
+	void onReachBottom() {};
+
 private:
 };
 #endif

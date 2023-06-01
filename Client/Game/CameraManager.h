@@ -1,5 +1,5 @@
-#ifndef GAMEMANAGER_H
-#define GAMEMANAGER_H
+#ifndef CAMERAMANAGER_H
+#define CAMERAMANAGER_H
 
 #include <string>
 #include <map>
@@ -32,5 +32,7 @@ public:
 private:
     std::vector<GameObject*> scrollingObjects_;
     float currentHeight_;
+
+	int distanceBetweenPlatformGens_;
 };
 #endif

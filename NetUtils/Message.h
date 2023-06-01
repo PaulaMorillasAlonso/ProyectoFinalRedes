@@ -43,7 +43,8 @@ public:
         WAITING=4,
         PLAYING=5,
         GAMEOVER=6,
-        WRONG_NAME=7
+        WRONG_NAME=7,
+        PLAYERJUMP=8
 
  
     };

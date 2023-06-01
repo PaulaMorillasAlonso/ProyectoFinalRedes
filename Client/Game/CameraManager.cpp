@@ -18,7 +18,7 @@ void CameraManager::scrollY(float center) {
 
     for (int i = 0; i < scrollingObjects_.size(); i++) {
         scrollingObjects_[i]->getTransform().setY(scrollingObjects_[i]->getTransform().getY() + moveY);
-        // if (scrollingObjects_[i].getTransform().getY() >? <?)
+        // if (scrollingObjects_[i]->getTransform().getY() >? <?)
         // Si se sale de pantalla, desactivar.
     }
 }

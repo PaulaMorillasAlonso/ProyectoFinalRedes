@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <iostream>
-Player::Player(std::string nickname) : GameObject(), vel_(), gravity_(-9.8), jumpVel_(50.0) {
+Player::Player(std::string nickname) : GameObject(), velY_(), gravity_(0.02), jumpVel_(-5) {
 
 	nick_=nickname;
 	setDimensions(50,50);
@@ -25,21 +25,27 @@ SDL_Scancode Player::handleInput(const SDL_Event &e) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
-/*void Player::update() {
-    tr_.setX(tr_.getX() + vel_.getX());
-    tr_.setY(tr_.getY() + vel_.getY());
+/*
+void Player::update() {
+	velY_ += gravity_;
 
-    vel_.setY(vel_.getY() + gravity_);
-
+	/*
 	if (tr_.getX() > GameManager::instance()->getWindowSize().getX())
 		tr_.setX(0);
 	else if (tr_.getX() < 0)
 		tr_.setX(GameManager::instance()->getWindowSize().getX());
-}
+	*/
 
+/*
+	tr_.setY(tr_.getY() + velY_);
+}
+*/
+
+/*
 void Player::render() {
 	GameObject::render();
-}*/
+}
+*/
 
 void Player::setKeys(SDL_Scancode left, SDL_Scancode right) {
 	left_ = left;

@@ -5,6 +5,8 @@
 #include "../NetUtils/SDLGame.h"
 #include "Game/Player.h"
 #include "../NetUtils/ObjectManager.h"
+#include "Game/CollisionManager.h"
+#include "Game/PlatformManager.h"
 
 void GameClient::login()
 {
@@ -21,6 +23,8 @@ void GameClient::initClient(){
     //Crea una ventana
     game_= SDLGame::GetInstance();
     objMan_= new ObjectManager();
+    collMan_= new CollisionManager();
+    platMan_= new PlatformManager();
 
     /*gameObject_= new GameObject();
     gameObject_->setTransform(0,0);
@@ -41,8 +45,15 @@ void GameClient::initClient(){
     myPlayer_->setTexture("Assets/player1.png");
     myPlayer_->setKeys(SDL_SCANCODE_A,SDL_SCANCODE_D);
     objMan_->addObject(myPlayer_);
+    collMan_->setPlayer(myPlayer_);
 
 
+    // Test Platform
+    int testPlatX = 600;
+    int testPlatY = 400;
+    Platform* p = platMan_->createPlatform(Vector2D(testPlatX, testPlatY));
+    objMan_->addObject(p);
+    collMan_->addPlatform(p);
 
 }
 void GameClient::logout()
@@ -128,9 +139,25 @@ void GameClient::render() const{
    
     
 }
-void GameClient::update(){
 
+void GameClient::update(){
+    myPlayer_->update();
+    if (otherPlayer_ != nullptr) otherPlayer_->update();
+
+    // Collision Message
+    if(collMan_->checkPlayerPlatformsCollisions()){
+
+        //Actualiza la informacion que el cliente tiene sobre su jugador
+        updateMyInfo();
+        //Envia esta informacion al servidor, que podra avisar al resto de jugadores
+        Message msg;
+        msg.nick=myNick_;
+        msg.type=Message::MessageType::PLAYERJUMP;
+        msg.playerInfo=playersInfo_[myNick_];
+        socket.send(msg, socket);
+    }
 }
+
 void GameClient::net_thread()
 {
 
@@ -189,6 +216,10 @@ void GameClient::net_thread()
 
                 gameIsRunning_=true;
                 waitingForOther_=false;
+
+                // For testing
+                std::cout << "Pos: (" << myPlayer_->getTransform().getX() << ", " << myPlayer_->getTransform().getY() << ")\n";
+
                 break;
             }
             case Message::MessageType::GAMEOVER:{
@@ -197,12 +228,23 @@ void GameClient::net_thread()
                 logoutDelay_=SDL_GetTicks()/1000.f;
                 break;
             }
+            case Message::MessageType::PLAYERJUMP:{
+                if (message.nick!= myPlayer_->getNick())
+                {
+                    otherPlayer_->setVelY(otherPlayer_->getJumpVel());
+                }
+                else {
+                    myPlayer_->setVelY(myPlayer_->getJumpVel());
+                }
+                break;
+            }
         }
        
     }
 }
 void GameClient::run(){
     while((gameIsRunning_||waitingForOther_) && !mustExit_){
+        if(!waitingForOther_) update();
         render();
         input_thread();
     }

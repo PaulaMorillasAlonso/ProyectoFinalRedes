@@ -22,6 +22,8 @@ public:
 	virtual ~PlatformManager();
 
     Platform* createPlatform();
+    Platform* createPlatform(Vector2D where);
+    Platform* createPlatform(Vector2D where, Vector2D size);
     void removePlatform(Platform* platform);
     std::list<Platform*> getPlatforms();
 

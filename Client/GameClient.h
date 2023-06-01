@@ -13,6 +13,9 @@
 class GameObject;
 class ObjectManager;
 class Player;
+class CollisionManager;
+class PlatformManager;
+
 class GameClient
 {
 public:
@@ -80,5 +83,7 @@ private:
     Player * otherPlayer_;
     std::string myNick_;
     ObjectManager * objMan_;
+    CollisionManager * collMan_;
+    PlatformManager * platMan_;
     SDLGame* game_;
 };
