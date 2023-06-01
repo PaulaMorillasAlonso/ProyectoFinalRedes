@@ -50,6 +50,12 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "stop_token": "cpp",
+        "list": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
     }
 }

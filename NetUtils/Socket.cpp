@@ -64,7 +64,6 @@ int Socket::recv(Serializable& obj, Socket*& sock)
 
 int Socket::send(Serializable& obj, const Socket& sock)
 {
-
     //Serializar el objeto
     obj.to_bin();
     //Enviar el objeto binario a sock usando el socket sd

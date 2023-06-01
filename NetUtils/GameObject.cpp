@@ -69,6 +69,9 @@ SDL_Texture* GameObject::getTexture(){
 }
 void GameObject::render()
 {
+    if (tr_.getX() + dim_.getX() < 0 || tr_.getY() + dim_.getY() < 0)
+    return;
+
     assert(text_ != nullptr);
 
     SDL_Rect src = build_sdlrect(0, 0, textDim_.getX(), textDim_.getY());

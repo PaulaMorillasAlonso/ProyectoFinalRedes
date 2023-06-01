@@ -116,6 +116,7 @@ void GameServer::do_messages()
                     //Mensaje para avisar al otro cliente de los cambios de posicion
                     Message playerMoved;
                     playerMoved.nick=msg.nick;
+                    playerMoved.message = msg.message;
                     players[msg.nick]=msg.playerInfo;
                     playerMoved.playerInfo=players[playerMoved.nick];
                     playerMoved.type=Message::MessageType::INPUT;
@@ -125,9 +126,7 @@ void GameServer::do_messages()
                     auto itPlayers=players.begin();
                     for (auto it = clients.begin(); it != clients.end(); it++)
                     {
-                        if((*itPlayers).first!=msg.nick){
                         socket.send(playerMoved, *((*it).second.get()));
-                        }
                         ++itPlayers;
                     }
 

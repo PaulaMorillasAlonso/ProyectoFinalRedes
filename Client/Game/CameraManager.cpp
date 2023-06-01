@@ -1,6 +1,7 @@
 #include "CameraManager.h"
 
 #include <cassert>
+#include <iostream>
 
 CameraManager::CameraManager() {
     // Igual hace falta WindowHeight
@@ -9,16 +10,35 @@ CameraManager::CameraManager() {
 CameraManager::~CameraManager() {
 }
 
+void CameraManager::setWindowHeight(int h) {
+    totalHeight_ = h;
+    currentHeight_ = h / 2;
+}
+
 void CameraManager::addScrollingObject(GameObject* obj) {
     scrollingObjects_.push_back(obj);
 }
 
-void CameraManager::scrollY(float center) {
-    float moveY = center - currentHeight_;
+void CameraManager::addPlayer(Player* p) {
+    players_.push_back(p);
+    addScrollingObject(p);
+}
 
-    for (int i = 0; i < scrollingObjects_.size(); i++) {
-        scrollingObjects_[i]->getTransform().setY(scrollingObjects_[i]->getTransform().getY() + moveY);
-        // if (scrollingObjects_[i]->getTransform().getY() >? <?)
-        // Si se sale de pantalla, desactivar.
+
+void CameraManager::checkPlayersHeightAndScroll() {
+    for (Player* p : players_){
+        if (p->getTransform().getY() < currentHeight_){
+            scrollY(p->getTransform().getY());
+        }
+    }
+}
+
+void CameraManager::scrollY(float center) {
+    float moveY = currentHeight_ - center;
+    // std::cout << "Scrolling " << moveY << "\n";
+
+    for (GameObject* g : scrollingObjects_) {
+        g->setTransform(g->getTransform().getX(), g->getTransform().getY() + moveY);
+        // g->getTransform().setY(g->getTransform().getY() + moveY);
     }
 }

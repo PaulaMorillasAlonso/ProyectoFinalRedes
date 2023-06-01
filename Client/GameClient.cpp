@@ -7,6 +7,7 @@
 #include "../NetUtils/ObjectManager.h"
 #include "Game/CollisionManager.h"
 #include "Game/PlatformManager.h"
+#include "Game/CameraManager.h"
 
 void GameClient::login()
 {
@@ -25,6 +26,9 @@ void GameClient::initClient(){
     objMan_= new ObjectManager();
     collMan_= new CollisionManager();
     platMan_= new PlatformManager();
+    camMan_= new CameraManager();
+
+    camMan_->setWindowHeight(480);
 
     /*gameObject_= new GameObject();
     gameObject_->setTransform(0,0);
@@ -46,6 +50,7 @@ void GameClient::initClient(){
     myPlayer_->setKeys(SDL_SCANCODE_A,SDL_SCANCODE_D);
     objMan_->addObject(myPlayer_);
     collMan_->setPlayer(myPlayer_);
+    camMan_->addPlayer(myPlayer_);
 
 
     // Test Platform
@@ -54,6 +59,53 @@ void GameClient::initClient(){
     Platform* p = platMan_->createPlatform(Vector2D(testPlatX, testPlatY));
     objMan_->addObject(p);
     collMan_->addPlatform(p);
+    camMan_->addScrollingObject(p);
+
+    // Platforms
+    Platform* p1 = platMan_->createPlatform(Vector2D(200, 400));
+    objMan_->addObject(p1);
+    collMan_->addPlatform(p1);
+    camMan_->addScrollingObject(p1);
+
+    Platform* p2 = platMan_->createPlatform(Vector2D(400, 300));
+    objMan_->addObject(p2);
+    collMan_->addPlatform(p2);
+    camMan_->addScrollingObject(p2);
+
+    Platform* p3 = platMan_->createPlatform(Vector2D(300, 220));
+    objMan_->addObject(p3);
+    collMan_->addPlatform(p3);
+    camMan_->addScrollingObject(p3);
+
+    Platform* p4 = platMan_->createPlatform(Vector2D(200, 150));
+    objMan_->addObject(p4);
+    collMan_->addPlatform(p4);
+    camMan_->addScrollingObject(p4);
+
+    Platform* p5 = platMan_->createPlatform(Vector2D(200, 50));
+    objMan_->addObject(p5);
+    collMan_->addPlatform(p5);
+    camMan_->addScrollingObject(p5);
+
+    Platform* p6 = platMan_->createPlatform(Vector2D(100, 0));
+    objMan_->addObject(p6);
+    collMan_->addPlatform(p6);
+    camMan_->addScrollingObject(p6);
+
+    Platform* p7 = platMan_->createPlatform(Vector2D(200, -50));
+    objMan_->addObject(p7);
+    collMan_->addPlatform(p7);
+    camMan_->addScrollingObject(p7);
+
+    Platform* p8 = platMan_->createPlatform(Vector2D(400, -150));
+    objMan_->addObject(p8);
+    collMan_->addPlatform(p8);
+    camMan_->addScrollingObject(p8);
+
+    Platform* p9 = platMan_->createPlatform(Vector2D(300, -250));
+    objMan_->addObject(p9);
+    collMan_->addPlatform(p9);
+    camMan_->addScrollingObject(p9);
 
 }
 void GameClient::logout()
@@ -106,6 +158,7 @@ void GameClient::input_thread()
                         Message msg;
                         msg.nick=myNick_;
                         msg.type=Message::MessageType::INPUT;
+                        msg.message="move";
                         msg.playerInfo=playersInfo_[myNick_];
                         socket.send(msg, socket);
                     }
@@ -152,10 +205,13 @@ void GameClient::update(){
         //Envia esta informacion al servidor, que podra avisar al resto de jugadores
         Message msg;
         msg.nick=myNick_;
-        msg.type=Message::MessageType::PLAYERJUMP;
+        msg.type=Message::MessageType::INPUT;
         msg.playerInfo=playersInfo_[myNick_];
+        msg.message = "jump";
         socket.send(msg, socket);
     }
+
+    camMan_->checkPlayersHeightAndScroll();
 }
 
 void GameClient::net_thread()
@@ -184,6 +240,7 @@ void GameClient::net_thread()
                     otherPlayer_->setTexture("Assets/player2.png");
                     otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
                     objMan_->addObject(otherPlayer_);
+                    camMan_->addPlayer(otherPlayer_);
                 }
                 else
                 {
@@ -200,8 +257,18 @@ void GameClient::net_thread()
             }
             case Message::MessageType::INPUT:{
 
-                //Si otro jugador se ha movido, actualizo su información
+                if (message.message == "jump"){
+                    // std::cout << "Overlap!\n";
+                    if (message.nick!= myPlayer_->getNick())
+                    {
+                        otherPlayer_->setVelY(otherPlayer_->getJumpVel());
+                    }
+                    else {
+                        myPlayer_->setVelY(myPlayer_->getJumpVel());
+                    }
+                }
 
+                //Si otro jugador se ha movido, actualizo su información
                 if (message.nick!= myPlayer_->getNick())
                 {
                     otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
@@ -212,6 +279,7 @@ void GameClient::net_thread()
 
                 break;
             }*/
+
             case Message::MessageType::PLAYING:{
 
                 gameIsRunning_=true;
@@ -226,16 +294,6 @@ void GameClient::net_thread()
                 //Asi evitamos que salga durante la partida
                 canExit_=true;
                 logoutDelay_=SDL_GetTicks()/1000.f;
-                break;
-            }
-            case Message::MessageType::PLAYERJUMP:{
-                if (message.nick!= myPlayer_->getNick())
-                {
-                    otherPlayer_->setVelY(otherPlayer_->getJumpVel());
-                }
-                else {
-                    myPlayer_->setVelY(myPlayer_->getJumpVel());
-                }
                 break;
             }
         }
@@ -262,7 +320,7 @@ void GameClient::updateMyInfo(){
     playersInfo_[myNick_].posY_=myInfo.posY_;
 
     //Prueba para comprobar si funcionaba el cambio a gameover ------------------------------------------------------- CAMBIAR GAMEOVER
-    if(myInfo.posX_<-10){
+    if(myInfo.posY_>700){
         std::cout<<"He perdido\n";
         Message final;
         final.type=Message::MessageType::GAMEOVER;

@@ -1,3 +1,4 @@
+#pragma once
 #include <thread>
 #include <memory>
 #include <vector>
@@ -15,6 +16,7 @@ class ObjectManager;
 class Player;
 class CollisionManager;
 class PlatformManager;
+class CameraManager;
 
 class GameClient
 {
@@ -85,5 +87,6 @@ private:
     ObjectManager * objMan_;
     CollisionManager * collMan_;
     PlatformManager * platMan_;
+    CameraManager * camMan_;
     SDLGame* game_;
 };

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CAMERAMANAGER_H
 #define CAMERAMANAGER_H
 
@@ -10,6 +11,7 @@
 #include "../../SDL_Utils/macros.h"
 #include "../../NetUtils/GameObject.h"
 #include "../../SDL_Utils/Vector2D.h"
+#include "Player.h"
 
 
 class CameraManager {
@@ -19,20 +21,18 @@ public:
 
 	CameraManager();
 	virtual ~CameraManager();
-
-	// the window's width
-	Vector2D getWindowSize();
-	Vector2D getRelativeWindowSize();
 	
-	void setWindowSize(Vector2D limit);
+	void setWindowHeight(int h);
     void scrollY(float center);
 
 	void addScrollingObject(GameObject* obj);
+	void addPlayer(Player* p);
+	void checkPlayersHeightAndScroll();
 
 private:
     std::vector<GameObject*> scrollingObjects_;
-    float currentHeight_;
-
-	int distanceBetweenPlatformGens_;
+	std::vector<Player*> players_;
+    int currentHeight_;
+	int totalHeight_;
 };
 #endif
