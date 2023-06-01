@@ -154,6 +154,7 @@ void GameServer::do_messages()
                 case Message::GAMEOVER:{
                   
                     Message over;
+                    over.nick=msg.nick;
                     over.type=Message::MessageType::GAMEOVER;
                     myState_.type=Message::MessageType::GAMEOVER;
                     //Avisa a todos de que ha acabado el juego

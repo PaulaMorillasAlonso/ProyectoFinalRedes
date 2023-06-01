@@ -204,10 +204,19 @@ void GameClient::update(){
         updateMyInfo();
         //Envia esta informacion al servidor, que podra avisar al resto de jugadores
         Message msg;
-        msg.nick=myNick_;
-        msg.type=Message::MessageType::INPUT;
-        msg.playerInfo=playersInfo_[myNick_];
-        msg.message = "jump";
+
+        if (collMan_->touchedLast()){
+            msg.nick=otherPlayer_->getNick();
+            msg.type=Message::MessageType::GAMEOVER;
+            msg.playerInfo=playersInfo_[myNick_];
+        }
+        else {
+            msg.nick=myNick_;
+            msg.type=Message::MessageType::INPUT;
+            msg.playerInfo=playersInfo_[myNick_];
+            msg.message = "jump";
+        }
+        
         socket.send(msg, socket);
     }
 
@@ -292,6 +301,15 @@ void GameClient::net_thread()
             }
             case Message::MessageType::GAMEOVER:{
                 //Asi evitamos que salga durante la partida
+
+                if (message.nick!= myPlayer_->getNick())
+                {
+                    std::cout << "He ganado\n";
+                }
+                else {
+                    std::cout << "He perdido\n";
+                }
+
                 canExit_=true;
                 logoutDelay_=SDL_GetTicks()/1000.f;
                 break;
@@ -320,9 +338,10 @@ void GameClient::updateMyInfo(){
     playersInfo_[myNick_].posY_=myInfo.posY_;
 
     //Prueba para comprobar si funcionaba el cambio a gameover ------------------------------------------------------- CAMBIAR GAMEOVER
-    if(myInfo.posY_>700){
-        std::cout<<"He perdido\n";
+    if(myInfo.posY_>700 && !canExit_){
+        // std::cout<<"He perdido\n";
         Message final;
+        final.nick=myNick_;
         final.type=Message::MessageType::GAMEOVER;
         socket.send(final,socket);
     }

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-CollisionManager::CollisionManager() {
+CollisionManager::CollisionManager() : finished_(false) {
     // Igual hace falta WindowHeight
 }
 
@@ -13,6 +13,8 @@ bool CollisionManager::checkPlayerPlatformsCollisions() {
     for(Platform* p : collisionPlatforms_) {
 
         if (player_->getVelY() > 0 && overlap(player_->getTransform(), player_->getDimensions(), p->getTransform(), p->getDimensions())){
+            if (p == collisionPlatforms_[collisionPlatforms_.size() - 1])
+                finished_ = true;
             return true;
         }
     }
