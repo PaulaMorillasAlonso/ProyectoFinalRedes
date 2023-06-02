@@ -43,8 +43,6 @@ Platform *PlatformManager::createPlatform(Vector2D where, Vector2D size)
     p->setTransform(where);
     p->setTexture("Assets/platform.png");
 
-    std::cout << "Pos: (" << p->getTransform().getX() << ", " << p->getTransform().getY() << ")\n";
-
     return p;
 }
 

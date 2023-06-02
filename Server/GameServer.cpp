@@ -75,8 +75,6 @@ void GameServer::update(){
             
   
         }
-
-        std::cout<<"Mi estado es: "<<std::to_string(myState_.type)<<"\n";
             
     }
 }
