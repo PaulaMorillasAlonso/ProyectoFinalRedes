@@ -190,11 +190,6 @@ void GameClient::render() const{
     
 }
 
-void GameClient::updateCamera(){
-
-    camMan_->checkPlayersHeightAndScroll();
-}
-
 void GameClient::net_thread()
 {
 
@@ -273,7 +268,7 @@ void GameClient::net_thread()
             case Message::MessageType::GAMEOVER:{
                 //Asi evitamos que salga durante la partida
 
-                if (message.nick!= myPlayer_->getNick())
+                if (message.nick == myPlayer_->getNick())
                 {
                     std::cout << "He ganado\n";
                 }
@@ -298,6 +293,7 @@ void GameClient::net_thread()
                         myPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
                         myPlayer_->setVelY(message.playerInfo.velY_);
                     }
+                camMan_->scrollY(message.playerInfo.scrollY_);
                     
                 break;
             }

@@ -21,24 +21,13 @@ void CameraManager::addScrollingObject(GameObject* obj) {
 
 void CameraManager::addPlayer(Player* p) {
     players_.push_back(p);
-    addScrollingObject(p);
+    // addScrollingObject(p);
 }
 
-
-void CameraManager::checkPlayersHeightAndScroll() {
-    for (Player* p : players_){
-        if (p->getTransform().getY() < currentHeight_){
-            scrollY(p->getTransform().getY());
-        }
-    }
-}
-
-void CameraManager::scrollY(float center) {
-    float moveY = currentHeight_ - center;
-    // std::cout << "Scrolling " << moveY << "\n";
+void CameraManager::scrollY(int scrollY) {
 
     for (GameObject* g : scrollingObjects_) {
-        g->setTransform(g->getTransform().getX(), g->getTransform().getY() + moveY);
+        g->setTransform(g->getTransform().getX(), g->getTransform().getY() + scrollY);
         // g->getTransform().setY(g->getTransform().getY() + moveY);
     }
 }

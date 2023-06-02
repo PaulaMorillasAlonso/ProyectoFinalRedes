@@ -17,6 +17,7 @@ public:
     bool checkPlayerPlatformsCollisions(float playerVelY, Vector2D playerPos, Vector2D playerDim,Vector2D platDim);
 
     void addPlatforms(Vector2D platPos);
+    void scrollPlatforms(int scrollY);
 
     bool touchedLast(){
         return finished_;

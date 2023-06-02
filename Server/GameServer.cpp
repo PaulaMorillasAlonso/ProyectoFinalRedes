@@ -28,47 +28,71 @@ void GameServer::update(){
         while(!exit_){
 
         if(myState_.type==Message::MessageType::PLAYING){
-            Message update;
+             Message update;
             update.type=Message::MessageType::PLAYERINFO;
+
+            int scrollY = 0;
+            for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
+            {
+                if (players[(*itPlayers).first].posY_ < 240 && 240 - players[(*itPlayers).first].posY_ > scrollY){
+                    scrollY = 240 - players[(*itPlayers).first].posY_;
+                }
+            }
+            if (scrollY != 0) colMan_.scrollPlatforms(scrollY);
 
             //Aplicamos la gravedad
             for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
             {
-                    update.nick=(*itPlayers).first;
-                    players[(*itPlayers).first].velY_+=gravity_;
-                    players[(*itPlayers).first].posY_+=players[(*itPlayers).first].velY_;
-                    update.playerInfo=players[(*itPlayers).first];
+                update.nick=(*itPlayers).first;
+                players[(*itPlayers).first].velY_+=gravity_;
+                players[(*itPlayers).first].posY_+=players[(*itPlayers).first].velY_;
+                players[(*itPlayers).first].posY_+=scrollY;
+                if (itPlayers == players.begin()) players[(*itPlayers).first].scrollY_ = scrollY;
+                else players[(*itPlayers).first].scrollY_ = 0;
+                update.playerInfo=players[(*itPlayers).first];
 
-                    for (auto it = clients.begin(); it != clients.end(); it++)
-                    {
-                        socket.send(update, *((*it).second.get()));
-                
-                    }
+                for (auto it = clients.begin(); it != clients.end(); it++)
+                {
+                    socket.send(update, *((*it).second.get()));
             
+                }
+        
             }
 
             for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
             {
-                 
-                    Vector2D playerPos(players[(*itPlayers).first].posX_,players[(*itPlayers).first].posY_);
-                    Vector2D playerDim(players[(*itPlayers).first].w_,players[(*itPlayers).first].h_);
+                
+                Vector2D playerPos(players[(*itPlayers).first].posX_,players[(*itPlayers).first].posY_);
+                Vector2D playerDim(players[(*itPlayers).first].w_,players[(*itPlayers).first].h_);
 
-                    if(colMan_.checkPlayerPlatformsCollisions(players[(*itPlayers).first].velY_,playerPos,playerDim,Vector2D(platW_,platH_))){
+                if(colMan_.checkPlayerPlatformsCollisions(players[(*itPlayers).first].velY_, playerPos, playerDim,Vector2D(platW_,platH_))){
 
-                        players[(*itPlayers).first].velY_=jumpVel_;
-                    }    
-                    if(players[(*itPlayers).first].posY_< 0){
+                    players[(*itPlayers).first].velY_=jumpVel_;
+                    if(colMan_.touchedLast()){
                         Message win;
                         win.type=Message::MessageType::GAMEOVER;
                         myState_.type=Message::MessageType::GAMEOVER;
-
                         win.nick=(*itPlayers).first;
+                        
                         for (auto it = clients.begin(); it != clients.end(); it++)
                         {
                             socket.send(win, *((*it).second.get()));
-                
                         }
+                        break;
                     }
+                }  
+                /*  
+                if(players[(*itPlayers).first].posY_<0){
+                    Message win;
+                    win.type=Message::MessageType::GAMEOVER;
+                    win.nick=(*itPlayers).first;
+                    for (auto it = clients.begin(); it != clients.end(); it++)
+                    {
+                        socket.send(win, *((*it).second.get()));
+            
+                    }
+                }
+                */
 
                             
             }

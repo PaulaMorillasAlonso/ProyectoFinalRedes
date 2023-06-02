@@ -23,11 +23,10 @@ public:
 	virtual ~CameraManager();
 	
 	void setWindowHeight(int h);
-    void scrollY(float center);
+    void scrollY(int scrollY);
 
 	void addScrollingObject(GameObject* obj);
 	void addPlayer(Player* p);
-	void checkPlayersHeightAndScroll();
 
 private:
     std::vector<GameObject*> scrollingObjects_;

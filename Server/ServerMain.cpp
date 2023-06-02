@@ -7,6 +7,5 @@ int main(int argc, char **argv)
 
      //update de la gravedad
     es.update();
-   
     return 0;
 }

@@ -33,6 +33,7 @@ struct PlayerInfo{
     float velY_;
     int w_;
     int h_;
+    int scrollY_;
 };
 class Message : public Serializable
 {
@@ -73,4 +74,3 @@ public:
     std::string nick;
     std::string message;
 };
-
