@@ -123,7 +123,7 @@ void GameClient::input_thread()
         // Start our event loop
         while(SDL_PollEvent(&event)){
             // Handle each specific event
-            /*if(canExit_)
+            if(canExit_)
             {
                 //Si el jugador sale por si mismo o si han pasado 5 segundos hace logout
                 float currTime=SDL_GetTicks()/1000.f;
@@ -132,8 +132,8 @@ void GameClient::input_thread()
                     logout();
                     break;
                 }
-            }*/
-            //else{
+            }
+            else{
                 
                 SDL_Scancode pressedKey;
                 if(!waitingForOther_){
@@ -161,7 +161,7 @@ void GameClient::input_thread()
                 
                 }
                 
-            //}
+            }
             
         }
         
@@ -281,10 +281,9 @@ void GameClient::net_thread()
                     std::cout << "He perdido\n";
                 }
 
-                /*canExit_=true;
-                logoutDelay_=SDL_GetTicks()/1000.f;*/
-                  gameIsRunning_= false;
-                    logout();
+                canExit_=true;
+                logoutDelay_=SDL_GetTicks()/1000.f;
+       
                 break;
             }
             case Message::MessageType::PLAYERINFO:{

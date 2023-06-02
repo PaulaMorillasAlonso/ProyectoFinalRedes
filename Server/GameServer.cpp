@@ -56,16 +56,12 @@ void GameServer::update(){
                     if(colMan_.checkPlayerPlatformsCollisions(players[(*itPlayers).first].velY_,playerPos,playerDim,Vector2D(platW_,platH_))){
 
                         players[(*itPlayers).first].velY_=jumpVel_;
-                        /*if(colMan_.touchedLast()){
-
-                            
-
-                            break;
-                        }*/
                     }    
-                    if(players[(*itPlayers).first].posY_<0){
+                    if(players[(*itPlayers).first].posY_< 0){
                         Message win;
                         win.type=Message::MessageType::GAMEOVER;
+                        myState_.type=Message::MessageType::GAMEOVER;
+
                         win.nick=(*itPlayers).first;
                         for (auto it = clients.begin(); it != clients.end(); it++)
                         {
@@ -79,6 +75,8 @@ void GameServer::update(){
             
   
         }
+
+        std::cout<<"Mi estado es: "<<std::to_string(myState_.type)<<"\n";
             
     }
 }
@@ -213,22 +211,7 @@ void GameServer::do_messages()
                  
                     break;
                 }
-                case Message::GAMEOVER:{
-                  
-                    Message over;
-                    over.nick=msg.nick;
-                    over.type=Message::MessageType::GAMEOVER;
-                    myState_.type=Message::MessageType::GAMEOVER;
-                    //Avisa a todos de que ha acabado el juego
-                    std::cout<<"Fin de la partida\n";
-
-                    for (auto it = clients.begin(); it != clients.end(); it++)
-                    {
-                        socket.send(over, *((*it).second.get()));
-                    }
-
-                    break;
-                }
+                
             }
         }
 
