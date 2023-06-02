@@ -32,9 +32,9 @@ private:
      */
     
 
-    float gravity_=-0.0002;
+    float gravity_=0.000002f;
     float jumpVel_;
-    const float PLAYER_MOVEMENT_=5;
+    const float PLAYER_MOVEMENT_=5.0f;
     Message myState_;
     Socket socket;
     std::string firstName_="";

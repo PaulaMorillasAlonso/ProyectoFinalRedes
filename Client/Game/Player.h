@@ -17,7 +17,6 @@ public:
     SDL_Scancode handleInput(const SDL_Event &event) override;
 
     void setKeys(SDL_Scancode left, SDL_Scancode right);
-
     void setVelY(float newVel) {
         velY_ = newVel;
     }

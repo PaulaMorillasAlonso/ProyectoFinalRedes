@@ -15,20 +15,21 @@ void GameServer::update(){
             update.type=Message::MessageType::PLAYERINFO;
 
             //auto itPlayers=players.begin();
-            for (auto it = clients.begin(); it != clients.end(); it++)
+            for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
             {
-                for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
-                {
                     update.nick=(*itPlayers).first;
                     players[(*itPlayers).first].velY_+=gravity_;
                     players[(*itPlayers).first].posY_+=players[(*itPlayers).first].velY_;
                     update.playerInfo=players[(*itPlayers).first];
 
-                    socket.send(update, *((*it).second.get()));
-            
-                }
+                    for (auto it = clients.begin(); it != clients.end(); it++)
+                    {
+                        socket.send(update, *((*it).second.get()));
                 
+                    }
+            
             }
+            
            
             
         }
@@ -85,7 +86,7 @@ void GameServer::do_messages()
                     PlayerInfo info;
                     info.posX_ = rand()%(670-50 + 1) + 50;
                     info.posY_= rand()%(430-50 + 1) + 50;
-                    info.velY_=0;
+                    info.velY_=0.0f;
                     players[msg.nick]=info;
 
                     Message newPlayer;

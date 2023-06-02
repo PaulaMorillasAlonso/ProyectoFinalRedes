@@ -329,9 +329,12 @@ void GameClient::net_thread()
                 if (message.nick!= myPlayer_->getNick())
                     {
                         otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                        otherPlayer_->setVelY(message.playerInfo.velY_);
+
                     }
                     else {
                         myPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
+                        myPlayer_->setVelY(message.playerInfo.velY_);
                     }
                     std::cout <<"Mi nick: "<<message.nick<<"Mi vel es: "<<message.playerInfo.velY_<<"Mi pos Y es :"<<message.playerInfo.posY_<<"\n";
                 break;

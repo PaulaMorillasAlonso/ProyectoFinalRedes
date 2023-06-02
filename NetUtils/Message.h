@@ -27,8 +27,8 @@
  */
 struct PlayerInfo{
 
-    int posX_;
-    int posY_;
+    float posX_;
+    float posY_;
     int input_;
     float velY_;
 };
