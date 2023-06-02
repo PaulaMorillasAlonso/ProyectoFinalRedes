@@ -71,7 +71,6 @@ private:
      */
     std::string nick;
 
-    std::vector<std::thread> threads;
     //Inforacin de los jugadores, similar a la del servidor
     std::map<std::string, PlayerInfo> playersInfo_;
 

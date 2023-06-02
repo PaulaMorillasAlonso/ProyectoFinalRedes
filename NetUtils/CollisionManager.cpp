@@ -26,13 +26,11 @@ void CollisionManager::addPlatforms(Vector2D pos){
 
 void CollisionManager::scrollPlatforms(int scrollY)
 {
-    std::cout << "Scroll Example: Pre (" << platformPositions_[0].getX() << ", " << platformPositions_[0].getY() << ")\n";
-
+    
     for (Vector2D& p : platformPositions_){
         p.setY(p.getY() + scrollY);
     }
-
-    std::cout << "Scroll Example: Post (" << platformPositions_[0].getX() << ", " << platformPositions_[0].getY() << "), Scrolled by " << scrollY << "\n";
+    
 }
 
 bool CollisionManager::overlap(Vector2D tr1, Vector2D dim1, Vector2D tr2, Vector2D dim2){
