@@ -56,8 +56,8 @@ public:
     void initClient();
     void render() const;
     void run();
-    void updateMyInfo();
-    void update();
+    //void updateMyInfo();
+    void updateCamera();
 
 private:
 
@@ -79,13 +79,12 @@ private:
     bool gameIsRunning_ = false;
     bool canExit_=false;
     bool mustExit_=false;
-    float timeUntilLogout_=5.0f;
+    float timeUntilLogout_=3.0f;
     float logoutDelay_=0;
     Player * myPlayer_;
     Player * otherPlayer_;
     std::string myNick_;
     ObjectManager * objMan_;
-    CollisionManager * collMan_;
     PlatformManager * platMan_;
     CameraManager * camMan_;
     SDLGame* game_;

@@ -5,7 +5,6 @@
 #include "../NetUtils/SDLGame.h"
 #include "Game/Player.h"
 #include "../NetUtils/ObjectManager.h"
-#include "Game/CollisionManager.h"
 #include "Game/PlatformManager.h"
 #include "Game/CameraManager.h"
 
@@ -24,7 +23,6 @@ void GameClient::initClient(){
     //Crea una ventana
     game_= SDLGame::GetInstance();
     objMan_= new ObjectManager();
-    collMan_= new CollisionManager();
     platMan_= new PlatformManager();
     camMan_= new CameraManager();
 
@@ -49,7 +47,7 @@ void GameClient::initClient(){
     myPlayer_->setTexture("Assets/player1.png");
     myPlayer_->setKeys(SDL_SCANCODE_A,SDL_SCANCODE_D);
     objMan_->addObject(myPlayer_);
-    collMan_->setPlayer(myPlayer_);
+    //collMan_->setPlayer(myPlayer_);
     camMan_->addPlayer(myPlayer_);
 
 
@@ -58,53 +56,43 @@ void GameClient::initClient(){
     int testPlatY = 400;
     Platform* p = platMan_->createPlatform(Vector2D(testPlatX, testPlatY));
     objMan_->addObject(p);
-    collMan_->addPlatform(p);
     camMan_->addScrollingObject(p);
 
     // Platforms
     Platform* p1 = platMan_->createPlatform(Vector2D(200, 400));
     objMan_->addObject(p1);
-    collMan_->addPlatform(p1);
     camMan_->addScrollingObject(p1);
 
     Platform* p2 = platMan_->createPlatform(Vector2D(400, 300));
     objMan_->addObject(p2);
-    collMan_->addPlatform(p2);
     camMan_->addScrollingObject(p2);
 
     Platform* p3 = platMan_->createPlatform(Vector2D(300, 220));
     objMan_->addObject(p3);
-    collMan_->addPlatform(p3);
     camMan_->addScrollingObject(p3);
 
     Platform* p4 = platMan_->createPlatform(Vector2D(200, 150));
     objMan_->addObject(p4);
-    collMan_->addPlatform(p4);
     camMan_->addScrollingObject(p4);
 
     Platform* p5 = platMan_->createPlatform(Vector2D(200, 50));
     objMan_->addObject(p5);
-    collMan_->addPlatform(p5);
     camMan_->addScrollingObject(p5);
 
     Platform* p6 = platMan_->createPlatform(Vector2D(100, 0));
     objMan_->addObject(p6);
-    collMan_->addPlatform(p6);
     camMan_->addScrollingObject(p6);
 
     Platform* p7 = platMan_->createPlatform(Vector2D(200, -50));
     objMan_->addObject(p7);
-    collMan_->addPlatform(p7);
     camMan_->addScrollingObject(p7);
 
     Platform* p8 = platMan_->createPlatform(Vector2D(400, -150));
     objMan_->addObject(p8);
-    collMan_->addPlatform(p8);
     camMan_->addScrollingObject(p8);
 
     Platform* p9 = platMan_->createPlatform(Vector2D(300, -250));
     objMan_->addObject(p9);
-    collMan_->addPlatform(p9);
     camMan_->addScrollingObject(p9);
 
 }
@@ -135,24 +123,23 @@ void GameClient::input_thread()
         // Start our event loop
         while(SDL_PollEvent(&event)){
             // Handle each specific event
-            if(canExit_)
+            /*if(canExit_)
             {
                 //Si el jugador sale por si mismo o si han pasado 5 segundos hace logout
                 float currTime=SDL_GetTicks()/1000.f;
-                if(event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE || currTime-logoutDelay_ > 5 ){ 
+                if(event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE || currTime-logoutDelay_ > timeUntilLogout_ ){ 
                     gameIsRunning_= false;
                     logout();
                     break;
                 }
-            }
-            else{
+            }*/
+            //else{
                 
                 SDL_Scancode pressedKey;
                 if(!waitingForOther_){
                     pressedKey= myPlayer_->handleInput(event);
                     if(pressedKey!=SDL_SCANCODE_UNKNOWN){
-                        //Actualiza la informacion que el cliente tiene sobre su jugador
-                        //updateMyInfo();
+
                         //Envia esta informacion al servidor, que podra avisar al resto de jugadores
                         Message msg;
                         msg.nick=myNick_;
@@ -174,7 +161,7 @@ void GameClient::input_thread()
                 
                 }
                 
-            }
+            //}
             
         }
         
@@ -203,32 +190,7 @@ void GameClient::render() const{
     
 }
 
-void GameClient::update(){
-    myPlayer_->update();
-    if (otherPlayer_ != nullptr) otherPlayer_->update();
-
-    // Collision Message
-    if(collMan_->checkPlayerPlatformsCollisions()){
-
-        //Actualiza la informacion que el cliente tiene sobre su jugador
-        updateMyInfo();
-        //Envia esta informacion al servidor, que podra avisar al resto de jugadores
-        Message msg;
-
-        if (collMan_->touchedLast()){
-            msg.nick=otherPlayer_->getNick();
-            msg.type=Message::MessageType::GAMEOVER;
-            msg.playerInfo=playersInfo_[myNick_];
-        }
-        else {
-            msg.nick=myNick_;
-            msg.type=Message::MessageType::INPUT;
-            msg.playerInfo=playersInfo_[myNick_];
-            msg.message = "jump";
-        }
-        
-        socket.send(msg, socket);
-    }
+void GameClient::updateCamera(){
 
     camMan_->checkPlayersHeightAndScroll();
 }
@@ -257,12 +219,14 @@ void GameClient::net_thread()
                     playersInfo_[message.nick] = p;
                     otherPlayer_= new Player(message.nick);
                     otherPlayer_->setTexture("Assets/player2.png");
+                    otherPlayer_->setDimensions(message.playerInfo.w_,message.playerInfo.h_);
                     otherPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
                     objMan_->addObject(otherPlayer_);
                     camMan_->addPlayer(otherPlayer_);
                 }
                 else
-                {
+                {   
+                    myPlayer_->setDimensions(message.playerInfo.w_,message.playerInfo.h_);
                     myPlayer_->setTransform(p.posX_,p.posY_);
 
                     PlayerInfo myInfo;
@@ -294,19 +258,16 @@ void GameClient::net_thread()
                 }
                 break;
             }
-            /*case Message::MessageType::WAITING:{
-
+            case Message::MessageType::WAITING:{
+                std::cout <<"Estoy esperando a otros jugadores\n";
                 break;
-            }*/
+            }
 
             case Message::MessageType::PLAYING:{
 
                 gameIsRunning_=true;
                 waitingForOther_=false;
-
-                // For testing
-                std::cout << "Pos: (" << myPlayer_->getTransform().getX() << ", " << myPlayer_->getTransform().getY() << ")\n";
-
+                
                 break;
             }
             case Message::MessageType::GAMEOVER:{
@@ -320,8 +281,10 @@ void GameClient::net_thread()
                     std::cout << "He perdido\n";
                 }
 
-                canExit_=true;
-                logoutDelay_=SDL_GetTicks()/1000.f;
+                /*canExit_=true;
+                logoutDelay_=SDL_GetTicks()/1000.f;*/
+                  gameIsRunning_= false;
+                    logout();
                 break;
             }
             case Message::MessageType::PLAYERINFO:{
@@ -336,7 +299,7 @@ void GameClient::net_thread()
                         myPlayer_->setTransform(message.playerInfo.posX_,message.playerInfo.posY_);
                         myPlayer_->setVelY(message.playerInfo.velY_);
                     }
-                    std::cout <<"Mi nick: "<<message.nick<<"Mi vel es: "<<message.playerInfo.velY_<<"Mi pos Y es :"<<message.playerInfo.posY_<<"\n";
+                    
                 break;
             }
         }
@@ -345,29 +308,12 @@ void GameClient::net_thread()
 }
 void GameClient::run(){
     while((gameIsRunning_||waitingForOther_) && !mustExit_){
-        //if(!waitingForOther_) //update();
         render();
-        input_thread();
+        if(!waitingForOther_){
+            //updateCamera();
+            input_thread();
+
+        }
     }
     
-}
-void GameClient::updateMyInfo(){
-
-    //Actualiza la informacion que le voy a enviar al servidor
-    PlayerInfo myInfo;
-    
-    myInfo.posX_=myPlayer_->getTransform().getX();
-    myInfo.posY_=myPlayer_->getTransform().getY();
-
-    playersInfo_[myNick_].posX_=myInfo.posX_;
-    playersInfo_[myNick_].posY_=myInfo.posY_;
-
-    //Prueba para comprobar si funcionaba el cambio a gameover ------------------------------------------------------- CAMBIAR GAMEOVER
-    if(myInfo.posY_>700 && !canExit_){
-        // std::cout<<"He perdido\n";
-        Message final;
-        final.nick=myNick_;
-        final.type=Message::MessageType::GAMEOVER;
-        socket.send(final,socket);
-    }
 }

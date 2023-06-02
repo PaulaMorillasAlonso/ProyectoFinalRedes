@@ -70,7 +70,6 @@ public:
 		y_ = v.y_;
 		return *this;
 	}
-
 	// v[0] is the first coordinate and v[1] is the second
 	inline float& operator[](int i) noexcept {
 		assert(i == 0 || i == 1);

@@ -1,11 +1,28 @@
 #include "GameServer.h"
 //#include "../NetUtils/Socket.h"
-
+#include "../SDL_Utils/Vector2D.h"
 GameServer::GameServer(const char* s, const char* p) : socket(s, p)
 {
         myState_.type=Message::MessageType::WAITING;
+        addPlatforms();
         socket.bind();
 };
+void GameServer::addPlatforms(){
+
+    colMan_= CollisionManager();
+    
+    colMan_.addPlatforms(Vector2D(600,400));
+    colMan_.addPlatforms(Vector2D(200,400));
+    colMan_.addPlatforms(Vector2D(400,300));
+    colMan_.addPlatforms(Vector2D(300,220));
+    colMan_.addPlatforms(Vector2D(200,150));
+    colMan_.addPlatforms(Vector2D(200,50));
+    colMan_.addPlatforms(Vector2D(100,0));
+    colMan_.addPlatforms(Vector2D(200,-50));
+    colMan_.addPlatforms(Vector2D(400,-150));
+    colMan_.addPlatforms(Vector2D(300,-250));
+
+}
 void GameServer::update(){
 
         while(!exit_){
@@ -14,7 +31,7 @@ void GameServer::update(){
             Message update;
             update.type=Message::MessageType::PLAYERINFO;
 
-            //auto itPlayers=players.begin();
+            //Aplicamos la gravedad
             for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
             {
                     update.nick=(*itPlayers).first;
@@ -29,29 +46,47 @@ void GameServer::update(){
                     }
             
             }
-            
-           
-            
-        }
-}
-        
-        
-}
 
+            for(auto itPlayers = players.begin(); itPlayers != players.end(); itPlayers++)
+            {
+                 
+                    Vector2D playerPos(players[(*itPlayers).first].posX_,players[(*itPlayers).first].posY_);
+                    Vector2D playerDim(players[(*itPlayers).first].w_,players[(*itPlayers).first].h_);
+
+                    if(colMan_.checkPlayerPlatformsCollisions(players[(*itPlayers).first].velY_,playerPos,playerDim,Vector2D(platW_,platH_))){
+
+                        players[(*itPlayers).first].velY_=jumpVel_;
+                        /*if(colMan_.touchedLast()){
+
+                            
+
+                            break;
+                        }*/
+                    }    
+                    if(players[(*itPlayers).first].posY_<0){
+                        Message win;
+                        win.type=Message::MessageType::GAMEOVER;
+                        win.nick=(*itPlayers).first;
+                        for (auto it = clients.begin(); it != clients.end(); it++)
+                        {
+                            socket.send(win, *((*it).second.get()));
+                
+                        }
+                    }
+
+                            
+            }
+            
+  
+        }
+            
+    }
+}
+        
 void GameServer::do_messages()
 {
     while (!exit_)
     {
-        /*
-         * NOTA: los clientes están definidos con "smart pointers", es necesario
-         * crear un unique_ptr con el objeto socket recibido y usar std::move
-         * para añadirlo al vector
-         */
-
-         //Recibir Mensajes en y en función del tipo de mensaje
-         // Leer mensaje del cliente
-         //Socket *client_socket;
-         //ChatMessage msg;
 
         Socket* client_socket=new Socket(socket);
         Message msg;
@@ -87,8 +122,9 @@ void GameServer::do_messages()
                     info.posX_ = rand()%(670-50 + 1) + 50;
                     info.posY_= rand()%(430-50 + 1) + 50;
                     info.velY_=0.0f;
+                    info.w_=50;
+                    info.h_=50;
                     players[msg.nick]=info;
-
                     Message newPlayer;
                     newPlayer.type= Message::MessageType::INIPLAYER;
                     newPlayer.nick=msg.nick;
@@ -145,11 +181,7 @@ void GameServer::do_messages()
                 }
                 case Message::INPUT:
                 {
-                    //Mensaje para avisar al otro cliente de los cambios de posicion
-                    /*Message playerMoved;
-                    playerMoved.nick=msg.nick;
-                    playerMoved.message = msg.message;*/
-               
+
                     if(msg.playerInfo.input_==Message::InputType::LEFT){
                      
                         players[msg.nick].posX_-=PLAYER_MOVEMENT_;
@@ -159,19 +191,6 @@ void GameServer::do_messages()
 
                         players[msg.nick].posX_+=PLAYER_MOVEMENT_;
                     }
-
-                    //playerMoved.playerInfo=players[playerMoved.nick];
-
-                   //playerMoved.type=Message::MessageType::PLAYERINFO;
-
-                    //Actualizamos la informacion correspondiente al cliente que se ha movido (ya que ha cambiado su posicion)
-                    //Avisamos al resto de jugadores de este cambio en la posicion del contrario
-                    /*auto itPlayers=players.begin();
-                    for (auto it = clients.begin(); it != clients.end(); it++)
-                    {
-                        socket.send(playerMoved, *((*it).second.get()));
-                        ++itPlayers;
-                    }*/
 
                     break;
                 }

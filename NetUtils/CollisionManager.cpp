@@ -3,17 +3,16 @@
 #include <cassert>
 
 CollisionManager::CollisionManager() : finished_(false) {
-    // Igual hace falta WindowHeight
 }
 
 CollisionManager::~CollisionManager() {
 }
 
-bool CollisionManager::checkPlayerPlatformsCollisions() {
-    for(Platform* p : collisionPlatforms_) {
+bool CollisionManager::checkPlayerPlatformsCollisions(float playerVelY, Vector2D playerPos, Vector2D playerDim,Vector2D platDim) {
+    for(Vector2D p : platformPositions_) {
 
-        if (player_->getVelY() > 0 && overlap(player_->getTransform(), player_->getDimensions(), p->getTransform(), p->getDimensions())){
-            if (p == collisionPlatforms_[collisionPlatforms_.size() - 1])
+        if (playerVelY > 0 && overlap(playerPos, playerDim, p, platDim)){
+            if (playerPos.getX() == platformPositions_[platformPositions_.size() - 1].getX() && playerPos.getY() == platformPositions_[platformPositions_.size() - 1].getY())
                 finished_ = true;
             return true;
         }
@@ -21,14 +20,8 @@ bool CollisionManager::checkPlayerPlatformsCollisions() {
     return false;
 }
 
-void CollisionManager::addPlatform(Platform* p){
-    collisionPlatforms_.push_back(p);
-    std::cout << "Platform Count: " << collisionPlatforms_.size() << "\n";
-}
-
-void CollisionManager::setPlayer(Player* p){
-    player_ = p;
-    std::cout << "Player Set\n";
+void CollisionManager::addPlatforms(Vector2D pos){
+    platformPositions_.push_back(pos);
 }
 
 bool CollisionManager::overlap(Vector2D tr1, Vector2D dim1, Vector2D tr2, Vector2D dim2){

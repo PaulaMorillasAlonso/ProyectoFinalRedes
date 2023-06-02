@@ -7,6 +7,7 @@
 #include <memory>
 #include "../NetUtils/Socket.h"
 #include "../NetUtils/Message.h"
+#include "../NetUtils/CollisionManager.h"
 
 class GameServer
 {
@@ -19,6 +20,7 @@ public:
      */
     void do_messages();
     void update();
+    void addPlatforms();
 private:
     /**
      *  Lista de clientes conectados al servidor de Chat, representados por
@@ -27,17 +29,21 @@ private:
 
     std::map<std::string,std::unique_ptr<Socket>> clients;
     std::map<std::string, PlayerInfo> players;
+ 
     /**
      * Socket del servidor
      */
     
 
     float gravity_=0.000002f;
-    float jumpVel_;
+    float jumpVel_=-0.025f;
     const float PLAYER_MOVEMENT_=5.0f;
     Message myState_;
     Socket socket;
     std::string firstName_="";
     bool exit_=false;
+    CollisionManager colMan_;
+    int platW_=150;
+    int platH_=30;
 
 };

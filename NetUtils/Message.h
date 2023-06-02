@@ -31,6 +31,8 @@ struct PlayerInfo{
     float posY_;
     int input_;
     float velY_;
+    int w_;
+    int h_;
 };
 class Message : public Serializable
 {
